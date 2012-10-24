@@ -1,19 +1,21 @@
 image_file1='a.png';
-image_file2='a.png';
-im1=imread(image_file1);
-im2=imread(image_file2);
+image_file2='b.png';
+im1_in=imread(image_file1);
+im2_in=imread(image_file2);
+im1=double(im1_in);
+im2=double(im2_in);
 [m,n] = size(im1)
 [x,y] = size(im2)
-
+tic
 for i = 1:m-1
     for j = 1:n-1
         %calculate X gradient
         Ex_1 = im1(i,j+1)-im1(i,j)+im1(i+1,j+1)-im1(i+1,j);
-        Ex_2 = im2(i,j+1)-im2(i,j)+im2(i+1,j+1)-im1(i+1,j);
+        Ex_2 = im2(i,j+1)-im2(i,j)+im2(i+1,j+1)-im2(i+1,j);
         Ex(i,j) = (Ex_1 + Ex_2)/4;
         %calculate Y gradient
         Ey_1 = im1(i+1,j)-im1(i,j)+im1(i+1,j+1)-im1(i,j+1);
-        Ey_2 = im2(i+1,j)-im2(i,j)+im2(i+1,j+1)-im1(i,j+1);
+        Ey_2 = im2(i+1,j)-im2(i,j)+im2(i+1,j+1)-im2(i,j+1);
         Ey(i,j) = (Ey_1 + Ey_2)/4;
         %calculate T gradient
         Et_1 = im2(i,j)-im1(i,j)+im2(i+1,j)-im1(i+1,j);
@@ -22,17 +24,15 @@ for i = 1:m-1
     end
 end
 
-u = ones(size(im1));
-v = ones(size(im1));
+u = zeros(size(im1));
+v = zeros(size(im1));
 for i = 1:m-1
     for j = 1:n-1
-        D(i,j)=10+Ex(i,j)^2+Ey(i,j)^2;
+        D(i,j)=0.01+Ex(i,j)^2+Ey(i,j)^2;
     end
 end
 
-for k = 1:8  %number of interation
-    
-    
+for k = 1:500  %number of interation
     for i = 2:m-1
         for j = 2:n-1
             %average u vector
@@ -69,4 +69,6 @@ step = max(s / 60);
 [X, Y] = meshgrid(1:step:s(2), s(1):-step:1);
 u_out = interp2(u, X, Y);
 v_out = interp2(v, X, Y);
+%imshow(u)
 quiver(u_out,v_out)
+toc
