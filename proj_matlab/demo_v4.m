@@ -104,6 +104,6 @@ u_out = medfilt2(u_out);
 v_out = medfilt2(v_out);
 %imshow(uint8(im1))
 %quiver(u_out,v_out,2)
-quiver(X, -Y, u_out, -v_out, 1.5, 'k', 'LineWidth', 1);
+quiver(X, -Y, u_out, -v_out, 1, 'k', 'LineWidth', 1);
 %axis image;
 toc
