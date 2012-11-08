@@ -20,7 +20,7 @@ using namespace std;
 extern float *filterKernel;
 extern float  filterScale;
 extern uint8_t *inputImagesBuffer;
-extern uint8_t *outputImagesBuffer;
+extern int32_t *outputImagesBuffer;
 extern uint32_t imageWidth, imageHeight, imageBufferSize;
 extern float floatKernel[WINDOW_SIZE];
 extern int32_t intKernel[WINDOW_SIZE];
@@ -52,8 +52,8 @@ int main (int argc, char* argv[]) {
   printf("[STATUS] Loading images, dimensions : %d x %d\n", imageWidth, imageHeight);
   
   // generated expected output image for current input
-  convolutionFilter(floatKernel, 2, inputImagesBuffer, outputImagesBuffer, imageWidth, imageHeight);
-  convolutionFilter(floatKernel, 2, &inputImagesBuffer[imageBufferSize], &outputImagesBuffer[imageBufferSize], imageWidth, imageHeight);
+  convolutionFilter(intKernel, 2, inputImagesBuffer, outputImagesBuffer, imageWidth, imageHeight);
+  convolutionFilter(intKernel, 2, &inputImagesBuffer[imageBufferSize], &outputImagesBuffer[imageBufferSize], imageWidth, imageHeight);
   printf("[STATUS] Images gaussian convolution done\n");
 
   fstream u("../u.txt", ios::out);

@@ -16,7 +16,7 @@ using namespace std;
 void allocateImageBuffers(int width, int height);
 void importInputImage(istream &input, uint8_t *buf, int len);
 void generateFilterKernel(float *floatInputKernel, float kernelScaleFactor, float *floatOutputKernel, int32_t *intOutputKernel);
-void convolutionFilter(float *kernel, int radius, uint8_t *in, uint8_t *out, int width, int height);
-void exportOutputVector(ostream &output, uint8_t *buf, int width, int height);
+void convolutionFilter(int32_t *kernel, int radius, uint8_t *in, int32_t *out, int width, int height);
+void exportOutputVector(ostream &output, int32_t *buf, int width, int height);
 
 #endif
