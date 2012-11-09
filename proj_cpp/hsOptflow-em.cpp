@@ -19,12 +19,15 @@ using namespace std;
 
 extern double *filterKernel;
 extern double  filterScale;
-extern uint8_t *inputImagesBuffer;
-extern int32_t *outputImagesBuffer;
-extern uint32_t imageWidth, imageHeight, imageBufferSize;
 extern double doubleKernel[WINDOW_SIZE];
 extern int32_t intKernel[WINDOW_SIZE];
 
+extern uint8_t *inputImagesBuffer;
+extern double *outputImagesBuffer;
+extern uint32_t imageWidth, imageHeight, imageBufferSize;
+
+extern double *Ex, *Ey, *Et, *D;
+extern double *u, *v, *uAvg, *vAvg, *P;
 
 int main (int argc, char* argv[]) {
   // set default values
@@ -56,25 +59,32 @@ int main (int argc, char* argv[]) {
   convolutionFilter(doubleKernel, 2, &inputImagesBuffer[imageBufferSize], &outputImagesBuffer[imageBufferSize], imageWidth, imageHeight);
   printf("[STATUS] Images gaussian convolution done\n");
 
-  fstream u("../u.txt", ios::out);
-  fstream v("../v.txt", ios::out);
-  if(!u.is_open() || !v.is_open())
+  allocateIntermediateVariables(imageWidth, imageHeight);
+  partialDerivative(outputImagesBuffer, &outputImagesBuffer[imageBufferSize], imageWidth, imageHeight);
+  printf("[STATUS] Images partial derivative calculation done\n");
+  motionVectorInteration(ITERATION_NUM, imageWidth, imageHeight);
+  printf("[STATUS] Motion vector iteration done\n");
+
+  fstream uFile("../u.txt", ios::out);
+  fstream vFile("../v.txt", ios::out);
+  if(!uFile.is_open() || !vFile.is_open())
   {
 	  cout << "No file(s) open for write!\n";
 	  return 1;
   }
-  exportOutputVector(u,outputImagesBuffer, imageWidth, imageHeight); u.close();
-  exportOutputVector(v,&outputImagesBuffer[imageBufferSize], imageWidth, imageHeight); v.close();
+  exportOutputVector(uFile,u, imageWidth, imageHeight); uFile.close();
+  exportOutputVector(vFile,v, imageWidth, imageHeight); vFile.close();
 
-  printf("Image 1\n");
+  /*
+  printf("Ex\tEy\tEt\tD\tP\n");
   for (int i=0;i<imageBufferSize;i++)
-	  printf("input=%5d  output=%15d\n",inputImagesBuffer[i],outputImagesBuffer[i]);
-  printf("Image 2\n");
-  for (int i=0;i<imageBufferSize;i++)
-	  printf("input=%5d  output=%15d\n",inputImagesBuffer[imageBufferSize+i],outputImagesBuffer[imageBufferSize+i]);
+	  printf("Ex=%3.4f   Ey=%3.4f   Et=%3.4f   D=%3.4f   P=%3.4f\n",Ex[i],Ey[i],Et[i],D[i],P[i]);
+  */
 
   free(inputImagesBuffer);
   free(outputImagesBuffer);
+  free(Ex); free(Ey); free(Et); free(D);
+  free(u); free(v); free(uAvg); free(vAvg); free(P);
 
   return 0;
 }

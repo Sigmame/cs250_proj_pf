@@ -24,7 +24,8 @@ gaussianKernel = [ 2.0,  4.0,  5.0,  4.0, 2.0; ...
 
 scale = 2^12;
 % C-style for matlab
-outgaussianK = int32(gaussianKernel/115*scale);
+outgaussianK = double(gaussianKernel)/115.0;
+outgaussianK = floor(outgaussianK*scale);
 outgaussianK = double(outgaussianK)/scale;
 im1 = tmp1;
 im2 = tmp2;
@@ -62,6 +63,10 @@ Et = zeros(m,n);
 
 u = zeros(size(im1));
 v = zeros(size(im1));
+D = zeros(size(im1));
+u_avg=zeros(size(im1));
+v_avg=zeros(size(im1));
+
 for i = 1:m-1
     for j = 1:n-1
         D(i,j)=0.01+Ex(i,j)^2+Ey(i,j)^2;
