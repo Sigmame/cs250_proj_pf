@@ -22,9 +22,10 @@ gaussianKernel = [ 2.0,  4.0,  5.0,  4.0, 2.0; ...
 %im1 = conv2(tmp1,outgaussianK,'same');
 %im2 = conv2(tmp2,outgaussianK,'same');
 
+scale = 2^12;
 % C-style for matlab
-outgaussianK = int32(gaussianKernel/115*2^12);
-outgaussianK = double(outgaussianK)/2^12;
+outgaussianK = int32(gaussianKernel/115*scale);
+outgaussianK = double(outgaussianK)/scale;
 im1 = tmp1;
 im2 = tmp2;
 r = 2;
@@ -32,18 +33,10 @@ for i = 1:m
     for j = 1:n
         if (i>=1+r && i<=m-r && j>=1+r && j<=n-r)
             im1(i,j) = sum(sum(tmp1((i-r):(i+r),(j-r):(j+r)).*outgaussianK));
-            if (im1(i,j) > 255*scale)
-                im1(i,j)=255*scale;
-            end
             im2(i,j) = sum(sum(tmp2((i-r):(i+r),(j-r):(j+r)).*outgaussianK));
-            if (im2(i,j) > 255*scale)
-                im2(i,j)=255*scale;
-            end
         end
     end
 end
-%im1=double(uint8(im1));
-%im2=double(uint8(im2));
 
 
 Ex = zeros(m,n);

@@ -17,12 +17,12 @@ using namespace std;
 #define DEFAULT_IMAGE_WIDTH (8)//(584)
 #define DEFAULT_NUM_IMAGES (1)
 
-extern float *filterKernel;
-extern float  filterScale;
+extern double *filterKernel;
+extern double  filterScale;
 extern uint8_t *inputImagesBuffer;
 extern int32_t *outputImagesBuffer;
 extern uint32_t imageWidth, imageHeight, imageBufferSize;
-extern float floatKernel[WINDOW_SIZE];
+extern double doubleKernel[WINDOW_SIZE];
 extern int32_t intKernel[WINDOW_SIZE];
 
 
@@ -36,7 +36,7 @@ int main (int argc, char* argv[]) {
 
   printf("[STATUS] Loading filter coefficients...\n");
   // generate coefficient values
-  generateFilterKernel(filterKernel, filterScale, floatKernel, intKernel);
+  generateFilterKernel(filterKernel, filterScale, doubleKernel, intKernel);
   allocateImageBuffers(imageWidth, imageHeight);
 
   // import input image file
@@ -52,8 +52,8 @@ int main (int argc, char* argv[]) {
   printf("[STATUS] Loading images, dimensions : %d x %d\n", imageWidth, imageHeight);
   
   // generated expected output image for current input
-  convolutionFilter(intKernel, 2, inputImagesBuffer, outputImagesBuffer, imageWidth, imageHeight);
-  convolutionFilter(intKernel, 2, &inputImagesBuffer[imageBufferSize], &outputImagesBuffer[imageBufferSize], imageWidth, imageHeight);
+  convolutionFilter(doubleKernel, 2, inputImagesBuffer, outputImagesBuffer, imageWidth, imageHeight);
+  convolutionFilter(doubleKernel, 2, &inputImagesBuffer[imageBufferSize], &outputImagesBuffer[imageBufferSize], imageWidth, imageHeight);
   printf("[STATUS] Images gaussian convolution done\n");
 
   fstream u("../u.txt", ios::out);
