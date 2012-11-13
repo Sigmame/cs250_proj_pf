@@ -24,9 +24,7 @@ gaussianKernel = [ 2.0,  4.0,  5.0,  4.0, 2.0; ...
 
 scale = 2^12;
 % C-style for matlab
-outgaussianK = double(gaussianKernel)/115.0;
-outgaussianK = floor(outgaussianK*scale);
-outgaussianK = double(outgaussianK)/scale;
+outgaussianK = double(gaussianKernel)/double(115.0);
 im1 = tmp1;
 im2 = tmp2;
 r = 2;
@@ -64,6 +62,7 @@ Et = zeros(m,n);
 u = zeros(size(im1));
 v = zeros(size(im1));
 D = zeros(size(im1));
+P = zeros(size(im1));
 u_avg=zeros(size(im1));
 v_avg=zeros(size(im1));
 
@@ -73,7 +72,7 @@ for i = 1:m-1
     end
 end
 
-for k = 1:8  %number of interation
+for k = 1:1  %number of interation
     
     for i = 2:m-1
         for j = 2:n-1
@@ -109,7 +108,7 @@ s = size(u);
 step = max(s / 60);
 %u = medfilt2(u);
 %v = medfilt2(v);
-[X, Y] = meshgrid(1:step:s(2), s(1):-step:1)
+[X, Y] = meshgrid(1:step:s(2), s(1):-step:1);
 %[X, Y] = meshgrid(1:10:s(2),s(1):-10:1);
 
 u_out = interp2(u, X, Y);
@@ -126,6 +125,6 @@ u_out = medfilt2(u_out);
 v_out = medfilt2(v_out);
 %imshow(uint8(im1))
 %quiver(u_out,v_out,2)
-quiver(X, -Y, u_out, -v_out, 1, 'k', 'LineWidth', 1);
+%quiver(X, -Y, u_out, -v_out, 1, 'k', 'LineWidth', 1);
 %axis image;
 toc

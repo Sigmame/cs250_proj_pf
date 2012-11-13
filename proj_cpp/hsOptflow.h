@@ -12,12 +12,13 @@ using namespace std;
 #define COEFF_WIDTH (16)
 #define COEFF_FRACT (12)
 #define COEFF_SCALE_FACTOR (1 << COEFF_FRACT)
-#define ITERATION_NUM (8)
+#define ITERATION_NUM (1)
+#define DISPLAY_DIGITS (35)
 
 void allocateImageBuffers(int width, int height);
 void allocateIntermediateVariables(int width, int height);
 void importInputImage(istream &input, uint8_t *buf, int len);
-void generateFilterKernel(double *doubleInputKernel, double kernelScaleFactor, double *doubleOutputKernel, int32_t *intOutputKernel);
+void generateFilterKernel(double *doubleInputKernel, double kernelScaleFactor, double *doubleOutputKernel);
 void convolutionFilter(double *kernel, int radius, uint8_t *in, double *out, int width, int height); // double output image
 void partialDerivative(double *img1, double *img2, int width, int height); // intermediate E's and D-term
 void motionVectorInteration(int iter, int width, int height); // intermediate E's and D-term

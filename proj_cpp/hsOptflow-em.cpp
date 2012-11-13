@@ -13,14 +13,13 @@
 #include <sstream>
 using namespace std;
 
-#define DEFAULT_IMAGE_HEIGHT (10)//(388)
-#define DEFAULT_IMAGE_WIDTH (8)//(584)
+#define DEFAULT_IMAGE_HEIGHT (388)//(388)
+#define DEFAULT_IMAGE_WIDTH (584)//(584)
 #define DEFAULT_NUM_IMAGES (1)
 
 extern double *filterKernel;
 extern double  filterScale;
 extern double doubleKernel[WINDOW_SIZE];
-extern int32_t intKernel[WINDOW_SIZE];
 
 extern uint8_t *inputImagesBuffer;
 extern double *outputImagesBuffer;
@@ -39,12 +38,12 @@ int main (int argc, char* argv[]) {
 
   printf("[STATUS] Loading filter coefficients...\n");
   // generate coefficient values
-  generateFilterKernel(filterKernel, filterScale, doubleKernel, intKernel);
+  generateFilterKernel(filterKernel, filterScale, doubleKernel);
   allocateImageBuffers(imageWidth, imageHeight);
 
   // import input image file
-  fstream img1("../im1.txt", ios::in);
-  fstream img2("../im2.txt", ios::in);
+  fstream img1("../img/im1_in.txt", ios::in); // test(10*8)|img(388*584) (two different set)
+  fstream img2("../img/im2_in.txt", ios::in);
   if(!img1.is_open() || !img2.is_open())
   {
     cout << "Image file(s) not found!\n";
@@ -65,6 +64,15 @@ int main (int argc, char* argv[]) {
   motionVectorInteration(ITERATION_NUM, imageWidth, imageHeight);
   printf("[STATUS] Motion vector iteration done\n");
 
+  /*
+  fstream ExFile("../Ex.txt", ios::out);
+  fstream EyFile("../Ey.txt", ios::out);
+  fstream EtFile("../Et.txt", ios::out);
+  exportOutputVector(ExFile, Ex, imageWidth, imageHeight); ExFile.close();
+  exportOutputVector(EyFile, Ey, imageWidth, imageHeight); EyFile.close();
+  exportOutputVector(EtFile, Et, imageWidth, imageHeight); EtFile.close();
+  */
+  
   fstream uFile("../u.txt", ios::out);
   fstream vFile("../v.txt", ios::out);
   if(!uFile.is_open() || !vFile.is_open())

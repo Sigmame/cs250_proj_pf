@@ -1,5 +1,6 @@
 #include "hsOptflow.h"
 #include <assert.h>
+#include <stdio.h>
 
 #include <iostream>
 #include <fstream>
@@ -15,9 +16,7 @@ double gaussianKernel5x5[] = \
 
 double* filterKernel = gaussianKernel5x5;
 double  filterScale  = 115.0;
-
 double doubleKernel[WINDOW_SIZE];
-int32_t intKernel[WINDOW_SIZE];
 
 uint32_t imageWidth, imageHeight, imageBufferSize = 0;
 uint8_t *inputImagesBuffer = NULL;
@@ -84,14 +83,13 @@ void importInputImage(istream &input, uint8_t *buf, int len)
 	}
 }
 
-void generateFilterKernel(double *doubleInputKernel, double kernelScaleFactor, double *doubleOutputKernel, int32_t *intOutputKernel)
+void generateFilterKernel(double *doubleInputKernel, double kernelScaleFactor, double *doubleOutputKernel)
 {
   double ftmp;
   for (int i=0;i<WINDOW_SIZE;i++)
   {
     ftmp = doubleInputKernel[i] / kernelScaleFactor;
-    intOutputKernel[i] = (int32_t) (ftmp * COEFF_SCALE_FACTOR);
-    doubleOutputKernel[i] = ((double)intOutputKernel[i]) / COEFF_SCALE_FACTOR;
+    doubleOutputKernel[i] = ftmp;
   }
 }
 
@@ -131,14 +129,14 @@ void convolutionFilter(double *kernel, int radius, uint8_t *in, double *out, int
 
 void partialDerivative(double *img1, double *img2, int width, int height)
 {
-	double E1, E2 = 0;
+	double E1, E2 = 0.0;
 	for (int y=0;y<height-1;y++)
 	{
 		for (int x=0;x<width-1;x++)
 		{
 			E1 = img1[x+1 + y*width] - img1[x + y*width] + img1[x+1 + (y+1)*width] - img1[x + (y+1)*width];
 			E2 = img2[x+1 + y*width] - img2[x + y*width] + img2[x+1 + (y+1)*width] - img2[x + (y+1)*width];
-			Ex[x + y*width] = (E1 + E2)/4.0; //calculate X gradient
+			Ex[x + y*width] = (E1 + E2)/(double)(4.0); //calculate X gradient
 			
 			E1 = img1[x + (y+1)*width] - img1[x + y*width] + img1[x+1 + (y+1)*width] - img1[x+1 + y*width];
 			E2 = img2[x + (y+1)*width] - img2[x + y*width] + img2[x+1 + (y+1)*width] - img2[x+1 + y*width];
@@ -193,9 +191,9 @@ void exportOutputVector(ostream &output, double *buf, int width, int height)
 	{
 		for (int x=0;x<width;x++)
 		{
-			ostringstream a;
-			a << (double)buf[x+y*width];
-			output << a.str();
+			char a[DISPLAY_DIGITS];
+			sprintf(a, "%.22f", buf[x+y*width]);
+			output << a;
 			if (x != width-1)
 				output << ",";
 		}
