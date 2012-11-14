@@ -6,5 +6,5 @@ dlmwrite('../proj_cpp/img/im2_in.txt',im2_in);
 u_cpp = dlmread('../proj_cpp/u.txt');
 v_cpp = dlmread('../proj_cpp/v.txt');
 
-sqrt(sum(sum((u-u_cpp).*(u-u_cpp)))/double(m*n))
-sqrt(sum(sum((v-v_cpp).*(v-v_cpp)))/double(m*n))
+u_rms = sqrt(sum(sum((u-u_cpp).*(u-u_cpp)))/double(m*n))
+v_rms = sqrt(sum(sum((v-v_cpp).*(v-v_cpp)))/double(m*n))

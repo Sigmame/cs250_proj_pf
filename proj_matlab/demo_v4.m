@@ -75,7 +75,7 @@ for i = 1:m-1
     end
 end
 
-for k = 1:1  %number of interation
+for k = 1:8  %number of interation
     
     for i = 2:m-1
         for j = 2:n-1
