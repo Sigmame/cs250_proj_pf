@@ -19,14 +19,17 @@ using namespace std;
 
 extern double *filterKernel;
 extern double  filterScale;
-extern double doubleKernel[WINDOW_SIZE];
+extern int32_t intKernel[WINDOW_SIZE];
 
 extern uint8_t *inputImagesBuffer;
-extern double *outputImagesBuffer;
+extern int64_t *outputImagesBuffer;
 extern uint32_t imageWidth, imageHeight, imageBufferSize;
 
-extern double *Ex, *Ey, *Et, *D;
-extern double *u, *v, *uAvg, *vAvg, *P;
+extern int64_t *Ex, *Ey, *Et, *D;
+extern int64_t *u, *v, *uAvg, *vAvg, *P;
+extern double *u_out, *v_out;
+
+extern double divParam;
 
 int main (int argc, char* argv[]) {
   // set default values
@@ -38,7 +41,7 @@ int main (int argc, char* argv[]) {
 
   printf("[STATUS] Loading filter coefficients...\n");
   // generate coefficient values
-  generateFilterKernel(filterKernel, filterScale, doubleKernel);
+  generateFilterKernel(filterKernel, filterScale, intKernel);
   allocateImageBuffers(imageWidth, imageHeight);
 
   // import input image file
@@ -54,12 +57,12 @@ int main (int argc, char* argv[]) {
   printf("[STATUS] Loading images, dimensions : %d x %d\n", imageWidth, imageHeight);
   
   // generated expected output image for current input
-  convolutionFilter(doubleKernel, 2, inputImagesBuffer, outputImagesBuffer, imageWidth, imageHeight);
-  convolutionFilter(doubleKernel, 2, &inputImagesBuffer[imageBufferSize], &outputImagesBuffer[imageBufferSize], imageWidth, imageHeight);
+  convolutionFilter(intKernel, 2, inputImagesBuffer, outputImagesBuffer, imageWidth, imageHeight);
+  convolutionFilter(intKernel, 2, &inputImagesBuffer[imageBufferSize], &outputImagesBuffer[imageBufferSize], imageWidth, imageHeight);
   printf("[STATUS] Images gaussian convolution done\n");
 
   allocateIntermediateVariables(imageWidth, imageHeight);
-  partialDerivative(outputImagesBuffer, &outputImagesBuffer[imageBufferSize], imageWidth, imageHeight);
+  partialDerivative(outputImagesBuffer, &outputImagesBuffer[imageBufferSize], divParam, imageWidth, imageHeight);
   printf("[STATUS] Images partial derivative calculation done\n");
   motionVectorInteration(ITERATION_NUM, imageWidth, imageHeight);
   printf("[STATUS] Motion vector iteration done\n");
@@ -80,19 +83,20 @@ int main (int argc, char* argv[]) {
 	  cout << "No file(s) open for write!\n";
 	  return 1;
   }
-  exportOutputVector(uFile,u, imageWidth, imageHeight); uFile.close();
-  exportOutputVector(vFile,v, imageWidth, imageHeight); vFile.close();
+  exportOutputVector(uFile, u_out, imageWidth, imageHeight); uFile.close();
+  exportOutputVector(vFile, v_out, imageWidth, imageHeight); vFile.close();
 
   /*
   printf("Ex\tEy\tEt\tD\tP\n");
   for (int i=0;i<imageBufferSize;i++)
-	  printf("Ex=%3.4f   Ey=%3.4f   Et=%3.4f   D=%3.4f   P=%3.4f\n",Ex[i],Ey[i],Et[i],D[i],P[i]);
+	  printf("Ex=%I64d  Ey=%I64d  Et=%I64d  D=%I64d  P=%I64d  u=%I64d  v=%I64d\n",Ex[i],Ey[i],Et[i],D[i],P[i],u[i],v[i]);
   */
 
   free(inputImagesBuffer);
   free(outputImagesBuffer);
   free(Ex); free(Ey); free(Et); free(D);
   free(u); free(v); free(uAvg); free(vAvg); free(P);
+  free(u_out); free(v_out);
 
   return 0;
 }

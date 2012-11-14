@@ -22,9 +22,11 @@ gaussianKernel = [ 2.0,  4.0,  5.0,  4.0, 2.0; ...
 %im1 = conv2(tmp1,outgaussianK,'same');
 %im2 = conv2(tmp2,outgaussianK,'same');
 
-scale = 2^12;
+scale = 2^20;
 % C-style for matlab
 outgaussianK = double(gaussianKernel)/double(115.0);
+outgaussianK = floor(outgaussianK .* scale);
+%outgaussianK = double(outgaussianK) ./ scale;
 im1 = tmp1;
 im2 = tmp2;
 r = 2;
@@ -32,11 +34,12 @@ for i = 1:m
     for j = 1:n
         if (i>=1+r && i<=m-r && j>=1+r && j<=n-r)
             im1(i,j) = sum(sum(tmp1((i-r):(i+r),(j-r):(j+r)).*outgaussianK));
+            im1(i,j) = im1(i,j)./scale;
             im2(i,j) = sum(sum(tmp2((i-r):(i+r),(j-r):(j+r)).*outgaussianK));
+            im2(i,j) = im2(i,j)./scale;
         end
     end
 end
-
 
 Ex = zeros(m,n);
 Ey = zeros(m,n);
@@ -125,6 +128,6 @@ u_out = medfilt2(u_out);
 v_out = medfilt2(v_out);
 %imshow(uint8(im1))
 %quiver(u_out,v_out,2)
-%quiver(X, -Y, u_out, -v_out, 1, 'k', 'LineWidth', 1);
+quiver(X, -Y, u_out, -v_out, 1, 'k', 'LineWidth', 1);
 %axis image;
 toc
