@@ -86,10 +86,10 @@ int main (int argc, char* argv[]) {
   exportOutputVector(uFile, u_out, imageWidth, imageHeight); uFile.close();
   exportOutputVector(vFile, v_out, imageWidth, imageHeight); vFile.close();
 
-  
+  /*
   for (int i=0;i<imageSize;i++)
 	  printf("Et=%I64d  D=%I64d  P=%I64d  u=%I64d  v=%I64d\n",Et[i],D[i],P[i],u[i],v[i]);
-  
+  */
 
   free(inputImages);
   free(outputImages);
