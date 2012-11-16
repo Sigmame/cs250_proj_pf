@@ -22,11 +22,11 @@ gaussianKernel = [ 2.0,  4.0,  5.0,  4.0, 2.0; ...
 %im1 = conv2(tmp1,outgaussianK,'same');
 %im2 = conv2(tmp2,outgaussianK,'same');
 
-scale = 2^12;
+scale = 2^20;
 % C-style for matlab
-outgaussianK = double(gaussianKernel)/115.0;
-outgaussianK = floor(outgaussianK*scale);
-outgaussianK = double(outgaussianK)/scale;
+outgaussianK = double(gaussianKernel)/double(115.0);
+outgaussianK = floor(outgaussianK .* scale);
+%outgaussianK = double(outgaussianK) ./ scale;
 im1 = tmp1;
 im2 = tmp2;
 r = 2;
@@ -34,11 +34,12 @@ for i = 1:m
     for j = 1:n
         if (i>=1+r && i<=m-r && j>=1+r && j<=n-r)
             im1(i,j) = sum(sum(tmp1((i-r):(i+r),(j-r):(j+r)).*outgaussianK));
+            im1(i,j) = im1(i,j)./scale;
             im2(i,j) = sum(sum(tmp2((i-r):(i+r),(j-r):(j+r)).*outgaussianK));
+            im2(i,j) = im2(i,j)./scale;
         end
     end
 end
-
 
 Ex = zeros(m,n);
 Ey = zeros(m,n);
@@ -64,6 +65,7 @@ Et = zeros(m,n);
 u = zeros(size(im1));
 v = zeros(size(im1));
 D = zeros(size(im1));
+P = zeros(size(im1));
 u_avg=zeros(size(im1));
 v_avg=zeros(size(im1));
 
@@ -109,7 +111,7 @@ s = size(u);
 step = max(s / 60);
 %u = medfilt2(u);
 %v = medfilt2(v);
-[X, Y] = meshgrid(1:step:s(2), s(1):-step:1)
+[X, Y] = meshgrid(1:step:s(2), s(1):-step:1);
 %[X, Y] = meshgrid(1:10:s(2),s(1):-10:1);
 
 u_out = interp2(u, X, Y);
