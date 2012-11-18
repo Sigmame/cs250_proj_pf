@@ -10,10 +10,10 @@ using namespace std;
 
 #define WINDOW_SIZE (25)
 //#define FP_WIDTH (30)
-#define FP_FRACT (20) //(16)
+#define FP_FRACT (16) //(16)
 #define FP_SCALE_FACTOR (1 << FP_FRACT)
 #define ITERATION_NUM (8) //(8)
-#define DISPLAY_DIGITS (40)
+#define DISPLAY_DIGITS (30)
 
 void allocateImageBuffers(int width, int height);
 void allocateIntermediateVariables(int width, int height);
