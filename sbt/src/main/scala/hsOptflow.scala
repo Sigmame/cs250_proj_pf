@@ -25,14 +25,6 @@ class hsOptflowTop(maxImageWidth: Integer, maxImageHeight: Integer, dataWidth: I
   control.io.image_height := io.image_height
 
   val winBuf = new windowBuf5x5(maxImageWidth, dataWidth)
-  winBuf.io.image_width := io.image_width
-  winBuf.io.din := io.data_in.toUFix()
-
-  val convolver = new convolution_wrapper(windowSize, dataWidth, coeffWidth, coeffFract, pipeStages)
-  convolver.io.din := winBuf.io.dout
-  for (i <- 0 until windowSize) {
-    convolver.io.coeff(i) := control.io.coeff_out(i).toUFix() // type conversion from Fix to UFix
-  }
 
   // NOTE: you will need to delay the frame_sync_out, data select signal and
   // the output of the window buffer appropriately to account for the number of
@@ -80,7 +72,7 @@ class hsOptflowTop(maxImageWidth: Integer, maxImageHeight: Integer, dataWidth: I
   }
 
 
-  io.data_out       := Reg(Mux(dosel_outReg, convolver.io.dout, win33_outReg)) // mid-pixel
+  io.data_out       := win33_outReg // mid-pixel
   io.frame_sync_out := syncO_outReg
 }
 
