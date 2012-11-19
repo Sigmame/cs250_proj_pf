@@ -16,24 +16,24 @@ object Work {
                              coeffFract = 16,   // number of bits to right of binary point
                              pipeStages = args(1).toInt))
 
-/*      case "partialDerivTest" =>
+      case "partialDerivTest" =>
           chiselMainTest( mainArgs, () => 
             new partialDeriv(windowSize = 8,
                              dataWidth = 16,
                              pdWidth = 16) ) { c => new partialDerivTest(c) }
-*/
-/*      case "uvCalcTest" =>
+
+      case "uvCalcTest" =>
           chiselMainTest( mainArgs, () =>
             new uvCalc(pdWidth = 16) ) { c => new uvCalcTest(c)}
-*/      
-/*      case "uvAvgTest" =>
+      
+      case "uvAvgTest" =>
           chiselMainTest( mainArgs, () =>
             new uvAvg(windowSize = 9, dataWidth = 16) ) { c => new uvAvgTest(c)}
-*/
-/*      case "windowBufTest" =>
+
+      case "windowBufTest" =>
           chiselMainTest( mainArgs, () =>
             new windowBuf5x5(imageWidth = 128, dataWidth = 8)) { c => new windowBuf5x5test(c)}
-*/  
+  
     }
   } 
 }   

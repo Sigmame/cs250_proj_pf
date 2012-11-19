@@ -1,0 +1,8 @@
+*~
+*.o
+hsOptflowTop-em
+*.vcd
+*.vpd
+*.log
+DVEfiles
+generated-src
