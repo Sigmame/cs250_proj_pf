@@ -6,7 +6,7 @@ import scala.collection.mutable.HashMap
 import scala.collection.mutable.ArrayBuffer
 import scala.util.Random
 
-class convolution(windowSize: Integer, dataWidth: Integer, coeffWidth: Integer, coeffFract: Integer) extends Component {
+class gaussian(windowSize: Integer, dataWidth: Integer, coeffWidth: Integer, coeffFract: Integer) extends Component {
   val io = new Bundle {
     val din   = Vec(windowSize) { UFix(dir = INPUT, width = dataWidth) }
 //    val coeff = Vec(windowSize) { UFix(dir = INPUT, width = coeffWidth) }
@@ -61,7 +61,7 @@ class convolution(windowSize: Integer, dataWidth: Integer, coeffWidth: Integer, 
   io.dout := Mux(overflow === UFix(0),temp(coeffFract+dataWidth-1,coeffFract),saturation)
  }
 
-class convolutionTest(c: convolution) extends Tester(c, Array(c.io)) { //binds the tester to convolution and test its io
+class gaussianTest(c: gaussian) extends Tester(c, Array(c.io)) { //binds the tester to convolution and test its io
   defTests {
     var allGood = true // test result boolean: true->pass
     val vars    = new HashMap[Node, Node]() // mapping of test nodes to literals
