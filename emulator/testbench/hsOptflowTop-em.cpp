@@ -1,5 +1,5 @@
 #include "hsOptflow.h"
-#include "hsOptflow-em.h"
+#include "hsOptflowTop-em.h"
 #include "hsOptflowTop.h" //scala generated-src
 
 #include <stdio.h>
@@ -78,15 +78,15 @@ int main (int argc, char* argv[]) {
   allocateIntermediateVariables(imageWidth, imageHeight);
 
   // open input/output files [PATH fix]   
-  fstream img1("../img/im1_in.txt", ios::in); // test(10*8)|img(388*584) (two different set)
-  fstream img2("../img/im2_in.txt", ios::in);
+  fstream img1("im1_in.txt", ios::in); // test(10*8)|img(388*584) (two different set)
+  fstream img2("im2_in.txt", ios::in);
   if(!img1.is_open() || !img2.is_open())
   {
     cout << "Image file(s) not found!\n";
     return -1;
   }
-  fstream uFile("../u.txt", ios::out);
-  fstream vFile("../v.txt", ios::out);
+  fstream uFile("u.txt", ios::out);
+  fstream vFile("v.txt", ios::out);
   if(!uFile.is_open() || !vFile.is_open())
   {
 	cout << "No file(s) open for write!\n";
