@@ -15,7 +15,7 @@ object BuildSettings
       scalaSource in Compile := Path.absolute(file(projectdir + "/src")),
       resourceDirectory in Compile := Path.absolute(file(projectdir + "/src/main/resources/")),
       resolvers += "Sonatype OSS Snapshots" at "https://oss.sonatype.org/content/repositories/snapshots",
-      libraryDependencies += "edu.berkeley.cs" %% "chisel" % "1.0.3"
+      libraryDependencies += "edu.berkeley.cs" %% "chisel" % "1.0.6"
     )
   }
 }
