@@ -1,6 +1,6 @@
-#include "hsOptflow.h"
-#include "hsOptflowTop-em.h"
-#include "hsOptflowTop.h" //scala generated-src
+#include "hsOptFlow.h"
+#include "hsOptFlowTop-em.h"
+#include "hsOptFlowTop.h" //scala generated-src
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -94,7 +94,7 @@ int main (int argc, char* argv[]) {
   }
 
   // Instantiate and initialize top level Chisel module
-  hsOptflowTop_t* dut = new hsOptflowTop_t();
+  hsOptFlowTop_t* dut = new hsOptFlowTop_t();
   dut->init();
 
   printf("Image dimensions : %d x %d\n", imageWidth, imageHeight);
@@ -121,7 +121,7 @@ int main (int argc, char* argv[]) {
         return -1;
       }
       // add some extra signals to the vcd file to help debugging
-      fprintf(vcdFile, "$scope module hsOptflowTopTestHarness $end\n");
+      fprintf(vcdFile, "$scope module hsOptFlowTopTestHarness $end\n");
       fprintf(vcdFile, "$var reg 32 NCYCLE cycle $end\n");
       fprintf(vcdFile, "$var reg 26 EXPECTED dout_expected $end\n");
       fprintf(vcdFile, "$var reg 26 MISMATCH dout_mismatch $end\n");
@@ -132,18 +132,21 @@ int main (int argc, char* argv[]) {
     // Set input port values
     // handle input image loading
     uint32_t io_frame_sync_in = 0;
-    uint8_t  io_data_in = 0;
+    uint8_t  io_data_in1 = 0;
+    uint8_t  io_data_in2 = 0;
+
     if (loadImage)
     {
       if (loadImageOffset == 0)
       { 
         importInputImage(img1, inputImages, imageSize); img1.close();
-		importInputImage(img2, &inputImages[imageSize], imageSize); img2.close();
+	 importInputImage(img2, &inputImages[imageSize], imageSize); img2.close();
         printf("[STATUS] Loading image pair %d, dimensions : %d x %d\n", loadImageCount+1, imageWidth, imageHeight);
         io_frame_sync_in = 1;
       }
-      io_data_in = inputImages[loadImageOffset++];
-      if (loadImageOffset == 2*imageSize)
+      io_data_in1 = inputImages[loadImageOffset++];
+      io_data_in2 = inputImages[imageSize+loadImageOffset-1];
+      if (loadImageOffset == imageSize)
       {
         loadImageCount++;
         loadImageOffset = 0;
@@ -154,22 +157,23 @@ int main (int argc, char* argv[]) {
       }
     }
 
-    dut->hsOptflowTop__io_data_in   = LIT<8>(io_data_in);
-    dut->hsOptflowTop__io_frame_sync_in = LIT<1>(io_frame_sync_in);
+    dut->hsOptFlowTop__io_data_in1   = LIT<8>(io_data_in1);
+    dut->hsOptFlowTop__io_data_in2   = LIT<8>(io_data_in2);
+    dut->hsOptFlowTop__io_frame_sync_in = LIT<1>(io_frame_sync_in);
 
     // handle image dimension setup
-    dut->hsOptflowTop__io_image_width = LIT<10>(imageWidth-1);
-    dut->hsOptflowTop__io_image_height = LIT<10>(imageHeight-1);
+    dut->hsOptFlowTop__io_image_width = LIT<10>(imageWidth-1);
+    dut->hsOptFlowTop__io_image_height = LIT<10>(imageHeight-1);
 
     // advance simulation
     dut->clock_lo(reset);
  
     // examine output port values
     // if frame_sync_out is asserted, start verification
-    if (dut->hsOptflowTop__io_frame_sync_out.lo_word())
+    if (dut->hsOptFlowTop__io_frame_sync_out.lo_word())
     {
-      // generated expected output image for current input
-      convolutionFilter(intKernel, 2, inputImages, outputImages, imageWidth, imageHeight);
+         // generated expected output image for current input
+         convolutionFilter(intKernel, 2, inputImages, outputImages, imageWidth, imageHeight);
 	  convolutionFilter(intKernel, 2, &inputImages[imageSize], &outputImages[imageSize], imageWidth, imageHeight); 
 	  //printf("[STATUS] Images gaussian convolution done\n");
 	  partialDerivative(outputImages, &outputImages[imageSize], divParam, imageWidth, imageHeight);
@@ -182,7 +186,7 @@ int main (int argc, char* argv[]) {
 
     if (checkOutput)
     {
-      int64_t dout = (int64_t) dut->hsOptflowTop__io_data_out.lo_word();
+      int64_t dout = (int64_t) dut->hsOptFlowTop__io_data_out.lo_word();
       dout_expected = u[checkOutputOffset]; // u, and then v
 	  if (checkOutputOffset >= imageSize)
 		  dout_expected = v[checkOutputOffset-imageSize];
@@ -219,11 +223,11 @@ int main (int argc, char* argv[]) {
 
     if (print_trace) {
       // Print the values of the input and output signals
-      uint32_t frame_sync_in  = dut->hsOptflowTop__io_frame_sync_in.lo_word();
-      uint8_t data_in         = dut->hsOptflowTop__io_data_in.lo_word();
+      uint32_t frame_sync_in  = dut->hsOptFlowTop__io_frame_sync_in.lo_word();
+      uint8_t data_in         = dut->hsOptFlowTop__io_data_in.lo_word();
       // outputs
-      uint32_t frame_sync_out = dut->hsOptflowTop__io_frame_sync_out.lo_word();
-      int64_t data_out        = dut->hsOptflowTop__io_data_out.lo_word();
+      uint32_t frame_sync_out = dut->hsOptFlowTop__io_frame_sync_out.lo_word();
+      int64_t data_out        = dut->hsOptFlowTop__io_data_out.lo_word();
   
       printf("cycle: %04d frame_sync_in: %d data_in: %02x frame_sync_out: %d data_out: %02x\n", \
           cycle, frame_sync_in, data_in, frame_sync_out, data_out);

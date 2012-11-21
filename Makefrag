@@ -5,5 +5,5 @@ ifndef PIPE_STAGES
 PIPE_STAGES = 1
 endif
 
-MODEL := hsOptflowTop
+MODEL := hsOptFlowTop
 TARGET=${MODEL}.${PIPE_STAGES}

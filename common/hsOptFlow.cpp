@@ -1,4 +1,4 @@
-#include "hsOptflow.h"
+#include "hsOptFlow.h"
 #include <assert.h>
 #include <stdio.h>
 
