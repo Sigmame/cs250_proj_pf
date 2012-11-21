@@ -8,8 +8,6 @@ class hsOptFlow_io(windowSize: Integer, dataWidth: Integer, coeffWidth: Integer,
   val data_in2       = UFix(INPUT, dataWidth)
   val frame_sync_in  = Bits(INPUT, 1)
 
-  val config_load    = Bits(INPUT, 1)
-  val coeff_in       = Fix(INPUT, coeffWidth)
   val image_width    = UFix(INPUT, dimWidth)
   val image_height   = UFix(INPUT, dimWidth)
 
@@ -17,7 +15,7 @@ class hsOptFlow_io(windowSize: Integer, dataWidth: Integer, coeffWidth: Integer,
   val frame_sync_out = Bits(OUTPUT,1)
 }
 
-class hsOptFlow(imageWidth: Integer, imageHeight: Integer, dataWidth: Integer, coeffWidth: Integer, coeffFract: Integer, pipeStages : Integer) extends Component {
+class hsOptFlowTop(imageWidth: Integer, imageHeight: Integer, dataWidth: Integer, coeffWidth: Integer, coeffFract: Integer, pipeStages : Integer) extends Component {
   val windowSize = 25
   val dimWidth = scala.math.max(log2Up(imageWidth), log2Up(imageHeight))
   val io = new hsOptFlow_io(windowSize, dataWidth, coeffWidth, dimWidth);
