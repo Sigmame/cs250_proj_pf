@@ -21,6 +21,8 @@ class control(imageWidth: Integer, imageHeight: Integer) extends Component {
   val isedge = x ===UFix(0) ||x===UFix(1)||x===UFix(2)|| x ===UFix(imageWidth-1) || y ===UFix(0) || y ===UFix(imageWidth-1)
   io.dout_select := ~isedge 
 
+  io.frame_sync_out := Bits(0) // !!! set default just for running test
+
   //INITIAL STATE
   when (state === INITIAL){
     when (io.frame_sync_in === Bits(1)){

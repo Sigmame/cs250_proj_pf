@@ -8,7 +8,7 @@
 #include <assert.h>
 #include <ctype.h>
 #include <errno.h>
-//#include <unistd.h> //unix
+#include <unistd.h> //unix
 
 #include <iostream>
 #include <fstream>
@@ -78,8 +78,8 @@ int main (int argc, char* argv[]) {
   allocateIntermediateVariables(imageWidth, imageHeight);
 
   // open input/output files [PATH fix]   
-  fstream img1("im1_in.txt", ios::in); // test(10*8)|img(388*584) (two different set)
-  fstream img2("im2_in.txt", ios::in);
+  fstream img1("./testbench/im1_in.txt", ios::in); // test(10*8)|img(388*584) (two different set)
+  fstream img2("./testbench/im2_in.txt", ios::in);
   if(!img1.is_open() || !img2.is_open())
   {
     cout << "Image file(s) not found!\n";
@@ -162,8 +162,8 @@ int main (int argc, char* argv[]) {
     dut->hsOptFlowTop__io_frame_sync_in = LIT<1>(io_frame_sync_in);
 
     // handle image dimension setup
-    dut->hsOptFlowTop__io_image_width = LIT<10>(imageWidth-1);
-    dut->hsOptFlowTop__io_image_height = LIT<10>(imageHeight-1);
+//    dut->hsOptFlowTop__io_image_width = LIT<10>(imageWidth-1);
+//    dut->hsOptFlowTop__io_image_height = LIT<10>(imageHeight-1);
 
     // advance simulation
     dut->clock_lo(reset);
@@ -224,13 +224,15 @@ int main (int argc, char* argv[]) {
     if (print_trace) {
       // Print the values of the input and output signals
       uint32_t frame_sync_in  = dut->hsOptFlowTop__io_frame_sync_in.lo_word();
-      uint8_t data_in         = dut->hsOptFlowTop__io_data_in.lo_word();
+      uint8_t data_in1        = dut->hsOptFlowTop__io_data_in1.lo_word();
+      uint8_t data_in2        = dut->hsOptFlowTop__io_data_in2.lo_word();
+
       // outputs
       uint32_t frame_sync_out = dut->hsOptFlowTop__io_frame_sync_out.lo_word();
       int64_t data_out        = dut->hsOptFlowTop__io_data_out.lo_word();
   
-      printf("cycle: %04d frame_sync_in: %d data_in: %02x frame_sync_out: %d data_out: %02x\n", \
-          cycle, frame_sync_in, data_in, frame_sync_out, data_out);
+      printf("cycle: %04d frame_sync_in: %d data_in1: %02x data_in2: %02x frame_sync_out: %d data_out: %02x\n", \
+          cycle, frame_sync_in, data_in1, data_in1, frame_sync_out, data_out);
     }
 
     // write trace output to VCD file

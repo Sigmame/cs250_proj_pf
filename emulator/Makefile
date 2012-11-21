@@ -61,5 +61,5 @@ run-trace : $(MODEL)-em
 all : $(MODEL)-em
 
 clean :
-	rm -rf hsOptFlow.o $(MODEL)-em.o $(MODEL).o $(MODEL)-em *.vcd *.vpd DVEfiles generated-src/*
+	rm -rf hsOptFlow.o $(MODEL)-em.o $(MODEL).o $(MODEL)-em *.vcd *.vpd DVEfiles generated-src/* *.txt
 
