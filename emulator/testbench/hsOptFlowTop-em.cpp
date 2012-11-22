@@ -135,7 +135,7 @@ int main (int argc, char* argv[]) {
     uint8_t  io_data_in1 = 0;
     uint8_t  io_data_in2 = 0;
 
-    if (loadImage)
+    if (cycle != 0 && loadImage)
     {
       if (loadImageOffset == 0)
       { 
