@@ -48,7 +48,7 @@ int main (int argc, char* argv[]) {
   imageWidth  = DEFAULT_IMAGE_WIDTH;
   int numImages = DEFAULT_NUM_IMAGES;
   int print_trace = 0; // enable text trace output    case 't':print_trace = 1;
-  int generate_vcd = 0; // enable vcd file generation      case 'v':generate_vcd = 1;
+  int generate_vcd = 1; // enable vcd file generation      case 'v':generate_vcd = 1;
   FILE *vcdFile = NULL;
   const char *vcdFileName = "trace.vcd";
 
