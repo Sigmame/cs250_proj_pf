@@ -9,6 +9,9 @@ INCLUDES = generated-src/emulator.h generated-src/$(MODEL).h testbench/hsOptFlow
 
 default : all
 
+gaussian-test: $(basedir)/src/gaussian.scala
+	cd $(basedir)/sbt ; $(SBT) "project work" "run gaussianTest --backend c --compile --targetDir ../emulator/generated-src --genHarness --test"
+
 partialDeriv-test: $(basedir)/src/partialDeriv.scala
 	cd $(basedir)/sbt ; $(SBT) "project work" "run partialDerivTest --backend c --compile --targetDir ../emulator/generated-src --genHarness --test"
 
