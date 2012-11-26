@@ -187,9 +187,12 @@ int main (int argc, char* argv[]) {
     if (checkOutput)
     {
       int64_t dout = (int64_t) dut->hsOptFlowTop__io_data_out.lo_word();
-      dout_expected = u[checkOutputOffset]; // u, and then v
-	  if (checkOutputOffset >= imageSize)
-		  dout_expected = v[checkOutputOffset-imageSize];
+//      int64_t dout = (int64_t) dut->hsOptFlowTop__io_img_out1.lo_word();
+      dout_expected = Ex[checkOutputOffset]; // u, and then v
+//      dout_expected = outputImages[checkOutputOffset]; // u, and then v
+//      dout_expected = u[checkOutputOffset]; // u, and then v
+//	  if (checkOutputOffset >= imageSize)
+//	    dout_expected = v[checkOutputOffset-imageSize];
 
       dout_mismatch = 0;
       if (dout != dout_expected)
@@ -246,6 +249,7 @@ int main (int argc, char* argv[]) {
       dat_dump(vcdFile, dat_t<26>(dout_expected), "EXPECTED");
       // mismatch signal (high when output doesn't match expected output)
       dat_dump(vcdFile, dat_t<1>(dout_mismatch), "MISMATCH");
+      
     }
 
     // advance simulation
@@ -258,7 +262,7 @@ int main (int argc, char* argv[]) {
   exportOutputVector(uFile, u_out, imageWidth, imageHeight); uFile.close();
   exportOutputVector(vFile, v_out, imageWidth, imageHeight); vFile.close();
   free(inputImages);
-  free(outputImages);
+  //free(outputImages);
   free(Ex); free(Ey); free(Et); free(D);
   free(u); free(v); free(uAvg); free(vAvg); free(P);
   free(u_out); free(v_out);
