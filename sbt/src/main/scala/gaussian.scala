@@ -6,11 +6,11 @@ import scala.collection.mutable.HashMap
 import scala.collection.mutable.ArrayBuffer
 import scala.util.Random
 
-class gaussian(windowSize: Integer, dataWidth: Integer, coeffWidth: Integer, coeffFract: Integer) extends Component {
+class gaussian(windowSize: Integer, dataWidth: Integer, coeffWidth: Integer, coeffFract: Integer, doutWidth: Integer) extends Component {
   val io = new Bundle {
     val din   = Vec(windowSize) { UFix(dir = INPUT, width = dataWidth) }
 //    val coeff = Vec(windowSize) { UFix(dir = INPUT, width = coeffWidth) }
-    val dout = UFix(OUTPUT, dataWidth)
+    val dout = UFix(OUTPUT, doutWidth)
   }
   val p = Vec(windowSize){UFix(width=coeffWidth+dataWidth)}
   val product = Vec(windowSize){UFix(width=coeffWidth+dataWidth+1)}
@@ -19,33 +19,36 @@ class gaussian(windowSize: Integer, dataWidth: Integer, coeffWidth: Integer, coe
   val add2  = Vec((windowSize-1)/8){UFix(width=coeffWidth+dataWidth+1)}
   val add3  = Vec(2){UFix(width=coeffWidth+dataWidth+1)}
   val coeff = Vec(windowSize){UFix(width=coeffWidth)}
-  coeff(0) := UFix(71)
-  coeff(1) := UFix(142)
-  coeff(2) := UFix(178)
-  coeff(3) := UFix(142)
-  coeff(4) := UFix(71)
-  coeff(5) := UFix(142)
-  coeff(6) := UFix(320)
-  coeff(7) := UFix(427)
-  coeff(8) := UFix(320)
-  coeff(9) := UFix(142)
-  coeff(10) := UFix(178)
-  coeff(11) := UFix(427)
-  coeff(12) := UFix(534)
-  coeff(13) := UFix(427)
-  coeff(14) := UFix(178)
-  coeff(15) := UFix(142)
-  coeff(16) := UFix(320)
-  coeff(17) := UFix(427)
-  coeff(18) := UFix(320)
-  coeff(19) := UFix(142)
-  coeff(20) := UFix(71)
-  coeff(21) := UFix(142)
-  coeff(22) := UFix(178)
-  coeff(23) := UFix(142)
-  coeff(24) := UFix(71)
+  // set coefficient 
+  coeff(0) := UFix(1140)  //(71)
+  coeff(1) := UFix(2280)  //(142)
+  coeff(2) := UFix(2849)  //(178)
+  coeff(3) := UFix(2280)
+  coeff(4) := UFix(1140)
+  coeff(5) := UFix(2280)
+  coeff(6) := UFix(5129) //(320)
+  coeff(7) := UFix(6839) //(427)
+  coeff(8) := UFix(5129)
+  coeff(9) := UFix(2280)
+  coeff(10) := UFix(2849)
+  coeff(11) := UFix(6839)
+  coeff(12) := UFix(8548)
+  coeff(13) := UFix(6839)
+  coeff(14) := UFix(2849)
+  coeff(15) := UFix(2280)
+  coeff(16) := UFix(5129)
+  coeff(17) := UFix(6839)
+  coeff(18) := UFix(5129)
+  coeff(19) := UFix(2280)
+  coeff(20) := UFix(1140)
+  coeff(21) := UFix(2280)
+  coeff(22) := UFix(2849)
+  coeff(23) := UFix(2280)
+  coeff(24) := UFix(1140)
+  // multiply pixel data and coefficient
   for (i<-0 until windowSize){
     p(i) := coeff(i)*io.din(i)
+  // sign extend
     product(i) = Cat(p(i)(coeffWidth+dataWidth-1),p(i)(coeffWidth+dataWidth-1,0))}
   for (i<-0 until (windowSize-1)/2){
     add0(i) := product(2*i) + product(2*i+1)}
@@ -55,10 +58,14 @@ class gaussian(windowSize: Integer, dataWidth: Integer, coeffWidth: Integer, coe
     add2(i) := add1(2*i)+add1(2*i+1)}
   add3(0) := add2(0)+add2(1)
   add3(1) := add2(2)+product(windowSize-1)
-  val temp = add3(0)+add3(1) + UFix(1<<(coeffFract-1))
-  val overflow = temp(coeffWidth+dataWidth,coeffFract+dataWidth)
-  val saturation = Mux(temp(coeffWidth+dataWidth)===UFix(1),UFix(0,dataWidth),UFix(255,dataWidth))
-  io.dout := Mux(overflow === UFix(0),temp(coeffFract+dataWidth-1,coeffFract),saturation)
+  // rounding
+  val temp = add3(0)+add3(1) 
+  // overflow = truncate sum to int
+//  val overflow = temp(coeffWidth+dataWidth,coeffFract+dataWidth)
+  val saturation = Mux(temp(coeffWidth+dataWidth)===UFix(1),UFix(0,doutWidth),UFix( 16777216,doutWidth)) 
+ // io.dout := Mux(overflow === UFix(0),temp(coeffFract+dataWidth+1,0),saturation)
+  io.dout := temp //(coeffFract+dataWidth+1,0)
+
  }
 
 class gaussianTest(c: gaussian) extends Tester(c, Array(c.io)) { //binds the tester to convolution and test its io
@@ -82,11 +89,12 @@ class gaussianTest(c: gaussian) extends Tester(c, Array(c.io)) { //binds the tes
       }
       if (sum < 0) sum = 0
       if (sum > maxInt) sum = maxInt
+     // sum = sum *65536
       sum.toInt
     } // get the convolution of the input
 
     var pos = 0.0
-    for (cnt <- 0 until 20) { // run tests
+    for (cnt <- 0 until 1) { // run tests
       for (i <- 0 until window) {
         inputs(i) = rnd.nextInt(maxInt/8)
         vars(c.io.din(i)) = UFix(inputs(i), wid)
