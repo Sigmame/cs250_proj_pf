@@ -35,10 +35,19 @@ class control(imageWidth: Integer, imageHeight: Integer) extends Component {
     count_y := Mux(count_x === UFix(imageWidth-1), count_y + UFix(1), count_y)
     coor_y := Mux(coor_x === UFix(scala.math.pow(2,log2Up(imageWidth)).toInt -1), coor_y + UFix(1), coor_y)
     when (count_x === UFix(2) && count_y === UFix(2)){
-      state := CALC
-      coor_y := UFix(0)
-      io.frame_sync_out := UFix(1)}
+      state := BUF_PD
+ //     io.frame_sync_out := UFix(1) //uncomment when testing gaussian result
+      coor_y := UFix(0)}
   }
+  //BUFFER FOR PARTIAL DERIVATIVE
+  when (state === BUF_PD){
+    count_x := Mux(count_x === UFix(imageWidth-1), UFix(0), count_x + UFix(1))
+    count_y := Mux(count_x === UFix(imageWidth-1), count_y + UFix(1), count_y)
+    coor_y := Mux(coor_x === UFix(scala.math.pow(2,log2Up(imageWidth)).toInt -1), coor_y + UFix(1), coor_y)
+    when (count_x === UFix(3) && count_y === UFix(3)){
+      state := CALC 
+      io.frame_sync_out := UFix(1)
+} }
   //Calculate (adjust this later)
   when (state === CALC){    //single cycle
     count_x := Mux(count_x === UFix(imageWidth-1), UFix(0), count_x + UFix(1))

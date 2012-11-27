@@ -8,16 +8,16 @@ import scala.util.Random
 
 class partialDeriv(windowSize: Integer, dataWidth: Integer, pdWidth: Integer) extends Component {
   val io = new Bundle {
-    val din   = Vec(windowSize) { UFix(dir = INPUT, width = dataWidth) }
+    val din   = Vec(windowSize) { Fix(dir = INPUT, width = dataWidth) }
     val Ex = Fix(OUTPUT, pdWidth)
     val Ey = Fix(OUTPUT, pdWidth)
     val Et = Fix(OUTPUT, pdWidth)
   }
 
 //im1(i,j+1)-im1(i,j)+im1(i+1,j+1)-im1(i+1,j);
-  val Ex_1 = io.din(1)-io.din(0)+io.din(3)-io.din(2)
-  val Ex_2 = io.din(5)-io.din(4)+io.din(7)-io.din(6)
-  io.Ex := (Ex_1 + Ex_2)>>UFix(2)
+  val Ex_1 = io.din(0)-io.din(1)+io.din(2)-io.din(3)
+  val Ex_2 = io.din(4)-io.din(5)+io.din(6)-io.din(7)
+  io.Ex := (Ex_1 + Ex_2) >>UFix(2)
 //im1(i+1,j)-im1(i,j)+im1(i+1,j+1)-im1(i,j+1);
   val Ey_1 = io.din(2)-io.din(0)+io.din(3)-io.din(1)
   val Ey_2 = io.din(6)-io.din(4)+io.din(7)-io.din(5)
