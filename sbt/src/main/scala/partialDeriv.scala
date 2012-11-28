@@ -19,8 +19,8 @@ class partialDeriv(windowSize: Integer, dataWidth: Integer, pdWidth: Integer) ex
   val Ex_2 = io.din(4)-io.din(5)+io.din(6)-io.din(7)
   io.Ex := (Ex_1 + Ex_2) >>UFix(2)
 //im1(i+1,j)-im1(i,j)+im1(i+1,j+1)-im1(i,j+1);
-  val Ey_1 = io.din(2)-io.din(0)+io.din(3)-io.din(1)
-  val Ey_2 = io.din(6)-io.din(4)+io.din(7)-io.din(5)
+  val Ey_1 = io.din(0)-io.din(2)+io.din(1)-io.din(3)
+  val Ey_2 = io.din(4)-io.din(6)+io.din(5)-io.din(7)
   io.Ey := (Ey_1 + Ey_2)>>UFix(2)
 //
   val Et_1 = io.din(4)-io.din(0)+io.din(5)-io.din(1)

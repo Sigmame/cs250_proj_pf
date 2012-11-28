@@ -2,6 +2,7 @@ package Work {
 
 import Chisel._
 import Node._
+import scala.collection.mutable.ArrayBuffer
 
 class hsOptFlow_io(windowSize: Integer, dataWidth: Integer, coeffWidth: Integer, dimWidth: Integer, doutWidth: Integer) extends Bundle() {
   val data_in1       = UFix(INPUT, dataWidth)
@@ -10,16 +11,16 @@ class hsOptFlow_io(windowSize: Integer, dataWidth: Integer, coeffWidth: Integer,
 
 //  val image_width    = UFix(INPUT, dimWidth)
 //  val image_height   = UFix(INPUT, dimWidth)
-  val img_out1      = UFix(OUTPUT, doutWidth)
-  val data_out       = UFix(OUTPUT,doutWidth)  //doutWidth = 9.16 + sign = 26
+  val data_out_u       = UFix(OUTPUT,doutWidth)  //doutWidth = 9.16 + sign = 26
+  val data_out_v       = UFix(OUTPUT,doutWidth)  //doutWidth = 9.16 + sign = 26
   val frame_sync_out = Bits(OUTPUT,1)
 }
 
-class hsOptFlowTop(imageWidth: Integer, imageHeight: Integer, dataWidth: Integer, coeffWidth: Integer, coeffFract: Integer, doutWidth : Integer) extends Component {
+class hsOptFlowTop(imageWidth: Integer, imageHeight: Integer, dataWidth: Integer, coeffWidth: Integer, coeffFract: Integer, doutWidth : Integer, iterationNum: Integer) extends Component {
   val windowSize = 25
   val dimWidth = scala.math.max(log2Up(imageWidth), log2Up(imageHeight))
   val io = new hsOptFlow_io(windowSize, dataWidth, coeffWidth, dimWidth, doutWidth);
-
+ 
 // Control 
   val control = new control(imageWidth, imageHeight)
   control.io.frame_sync_in := io.frame_sync_in
@@ -40,7 +41,6 @@ class hsOptFlowTop(imageWidth: Integer, imageHeight: Integer, dataWidth: Integer
 // Two Mux for detecting edge
   val data_g1 = Mux(control.io.dout_select, gaussianF1.io.dout, wbuf1_out << UFix(coeffFract))
   val data_g2 = Mux(control.io.dout_select, gaussianF2.io.dout, wbuf2_out << UFix(coeffFract))
-  io.img_out1 := data_g1 
 
 // One 2x2x2 windowBuf for partial derivative
 // imageWidth, dataWidth, memWidth
@@ -52,17 +52,17 @@ class hsOptFlowTop(imageWidth: Integer, imageHeight: Integer, dataWidth: Integer
   val pDeriv = new partialDeriv(8, 26, 26)
   pDeriv.io.din := winBuf2x2x2.io.dout
 
-// calculate uv: pdWidth, pdFrac, dpFrac, uvWidth, uvFrac
-  val uvCalculation = new uvCalc(26, 16, 16, 26, 16)
-  val uvAverage = new uvAvg(9, 26)
-  uvCalculation.io.Ex := pDeriv.io.Ex
-  uvCalculation.io.Ey := pDeriv.io.Ey
-  uvCalculation.io.Et := pDeriv.io.Et
-  uvCalculation.io.uAvg := uvAverage.io.uAvg 
-  uvCalculation.io.vAvg := uvAverage.io.vAvg
 
-// calculate average uv:
-  io.data_out := Reg(pDeriv.io.Ex.toUFix()) // for test bench debug
+// calculate uv: pdWidth, pdFrac, dpFrac, uvWidth, uvFrac
+   val iterCalc =  new uvIteration(26, 26, imageWidth, doutWidth, 1024) 
+//             val x = uvCalculation(2) // the second element
+  iterCalc.io.Ex := pDeriv.io.Ex
+  iterCalc.io.Ey := pDeriv.io.Ey
+  iterCalc.io.Et := pDeriv.io.Et
+  io.data_out_u := UFix(0)
+  io.data_out_v := UFix(0)
+  io.data_out_u := Reg(iterCalc.io.u_out.toUFix()) // for test bench debug
+  io.data_out_v := Reg(iterCalc.io.v_out.toUFix()) // for test bench debug
   io.frame_sync_out := Reg(control.io.frame_sync_out)
 }
 

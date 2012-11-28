@@ -14,7 +14,8 @@ object Work {
                                  dataWidth = 8, 
                                  coeffWidth = 20,  // coefficient width (including sign bit)
                                  coeffFract = 16,   // number of bits to right of binary point
-                                 doutWidth = 26))
+                                 doutWidth = 26,
+                                 iterationNum = 8))
                         //         pipeStages = args(1).toInt))
 
         case "gaussianTest" =>

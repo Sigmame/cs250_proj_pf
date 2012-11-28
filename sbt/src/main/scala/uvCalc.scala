@@ -19,9 +19,9 @@ class uvCalc(pdWidth: Integer, pdFrac: Integer, dpFrac: Integer, uvWidth: Intege
     val u = Fix(OUTPUT, uvWidth)
     val v = Fix(OUTPUT, uvWidth)
   }
-  val a = UFix(1<<dpFrac)
-  io.P := io.Ex * io.uAvg + io.Ey * io.vAvg + io.Et //<<UFix(uvFrac)
-  io.D := io.Ex * io.Ex + io.Ey * io.Ey //+ a*a     //a*a
+  val a = UFix(1<<14)
+  io.P := io.Ex * io.uAvg + io.Ey * io.vAvg + io.Et <<UFix(uvFrac)
+  io.D := io.Ex * io.Ex + io.Ey * io.Ey + a*a     //a*a
   val P_D = io.P/io.D //truncate 
   io.u := io.uAvg - io.Ex * P_D    // divide by D later
   io.v := io.vAvg - io.Ey * P_D    // divide by D later
@@ -34,24 +34,25 @@ class uvCalcTest(c: uvCalc) extends Tester(c, Array(c.io)) {
     val rnd = new Random()
     val window = 8
     val wid = 26 
-    var a = 1 
+    var a = 1<<14 
     var inputs_Ex = 1
     var inputs_Ey = 1
     var inputs_Et = 1
     var inputs_uAvg = 1
     var inputs_vAvg = 1
-    val maxInt = 128 
+    val maxInt = 64
+    val uvFrac = 16
     def uCalc(Ex: Integer, Ey: Integer, Et: Integer, uAvg: Integer, vAvg: Integer) = 
     {
-      var P = Ex*uAvg + Ey*vAvg + Et
-      var D = Ex^2 + Ey^2 //+ a^2 
+      var P = Ex*uAvg + Ey*vAvg + Et<<uvFrac
+      var D = Ex*Ex + Ey*Ey + a*a 
       var u = uAvg - Ex*P/D
       u.toInt
     }
     def vCalc(Ex: Integer, Ey: Integer, Et: Integer, uAvg: Integer, vAvg: Integer) =
     {
       var P = Ex*uAvg + Ey*vAvg + Et
-      var D = Ex*Ex + Ey*Ey// + a^2 
+      var D = Ex*Ex + Ey*Ey + a*a 
       var v = vAvg - Ex*P/D
       v.toInt
     }
