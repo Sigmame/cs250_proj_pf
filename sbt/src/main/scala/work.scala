@@ -52,7 +52,7 @@ object Work {
 
         case "windowBuf3Test" =>
             chiselMainTest( mainArgs, () =>
-                new windowBuf3x3(imageWidth = 128, dataWidth = 26, memWidth = 32)) { c => new windowBuf3x3test(c)}
+                new windowBuf3x3(imageWidth = 128, doutWidth = 26, memWidth = 32)) { c => new windowBuf3x3test(c)}
     }
   } 
 }   

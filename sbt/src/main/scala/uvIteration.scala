@@ -26,10 +26,10 @@ class uvIteration(pdWidth: Integer, uvWidth: Integer, imageWidth: Integer, doutW
   uvCalculation.io.vAvg := uvAverage.io.vAvg
   uvAverage.io.uin := winBuf3_u.io.dout(5) 
   uvAverage.io.vin := winBuf3_v.io.dout(5)
-  winBuf3_u.io.din := uvCalculation.io.u.toUFix()
-  winBuf3_v.io.din := uvCalculation.io.v.toUFix()
-  io.u_out := winBuf3_u.io.dout(5)
-  io.v_out := winBuf3_v.io.dout(5)
+  winBuf3_u.io.din := UFix(0)//uvCalculation.io.u.toUFix()
+  winBuf3_v.io.din := UFix(0) //uvCalculation.io.v.toUFix()
+  io.u_out := uvCalculation.io.u//winBuf3_u.io.dout(5)
+  io.v_out := uvCalculation.io.v//winBuf3_v.io.dout(5)
   }
 
   }

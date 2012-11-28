@@ -20,11 +20,13 @@ class uvCalc(pdWidth: Integer, pdFrac: Integer, dpFrac: Integer, uvWidth: Intege
     val v = Fix(OUTPUT, uvWidth)
   }
   val a = UFix(1<<14)
-  io.P := io.Ex * io.uAvg + io.Ey * io.vAvg + io.Et <<UFix(uvFrac)
-  io.D := io.Ex * io.Ex + io.Ey * io.Ey + a*a     //a*a
+  io.P := io.Ex * io.uAvg + io.Ey * io.vAvg + io.Et <<UFix(uvFrac) //Frac: 14+16
+  io.D := io.Ex * io.Ex + io.Ey * io.Ey + a*a     //Fract: 14+14
+  P >> UFix(uvFrac)
+  D >> UFix(uvFrac) 
   val P_D = io.P/io.D //truncate 
-  io.u := io.uAvg - io.Ex * P_D    // divide by D later
-  io.v := io.vAvg - io.Ey * P_D    // divide by D later
+  io.u := io.uAvg - io.Ex * P_D    
+  io.v := io.vAvg - io.Ey * P_D   
   }
 
 class uvCalcTest(c: uvCalc) extends Tester(c, Array(c.io)) {

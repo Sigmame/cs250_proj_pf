@@ -28,7 +28,7 @@ int64_t *Ex, *Ey, *Et, *D = NULL; // intermediate variable arrays
 int64_t *u, *v, *uAvg, *vAvg, *P = NULL; // iteration variable arrays
 double  *u_out, *v_out = NULL; // output
 
-double divParam = 0.01; //divider parameter
+double divParam = 1; //divider parameter
 
 void allocateImageBuffers(int width, int height)
 {

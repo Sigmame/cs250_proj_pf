@@ -7,18 +7,18 @@ import scala.collection.mutable.HashMap
 import scala.collection.mutable.ArrayBuffer
 import scala.util.Random
 
-class windowBuf3x3(imageWidth: Integer, dataWidth: Integer, memWidth : Integer) extends Component {
+class windowBuf3x3(imageWidth: Integer, doutWidth: Integer, memWidth : Integer) extends Component {
   val windowSize = 9
   val io = new Bundle {
-    val din = UFix(INPUT, dataWidth)
-    val dout = Vec(windowSize) { UFix(dir = OUTPUT, width = dataWidth) }
+    val din = UFix(INPUT, doutWidth)
+    val dout = Vec(windowSize) { UFix(dir = OUTPUT, width = doutWidth) }
   }
   //instantiate SRAM 1024x32 (4*8bit)
-  val row1buf = Mem(imageWidth,seqRead=true){UFix(width=memWidth)}
-  val row2buf = Mem(imageWidth,seqRead=true){UFix(width=memWidth)}
-  val readOut1 = Reg(resetVal = UFix(0,dataWidth))
-  val readOut2 = Reg(resetVal = UFix(0,dataWidth))
-  val out_reg = Vec(windowSize){Reg(resetVal = UFix(0,dataWidth))}
+  val row1buf = Mem(imageWidth,seqRead=true){UFix(width=doutWidth)}
+  val row2buf = Mem(imageWidth,seqRead=true){UFix(width=doutWidth)}
+  val readOut1 = Reg(resetVal = UFix(0,doutWidth))
+  val readOut2 = Reg(resetVal = UFix(0,doutWidth))
+  val out_reg = Vec(windowSize){Reg(resetVal = UFix(0,doutWidth))}
   val count = Reg(resetVal = UFix(0,log2Up(imageWidth)))
 
   io.dout := out_reg
@@ -32,8 +32,8 @@ class windowBuf3x3(imageWidth: Integer, dataWidth: Integer, memWidth : Integer) 
   for (i <- 1 until windowSize){
     if (i!=3 && i!=6){
       out_reg(i) := out_reg(i-1)}}
-  out_reg(3) := readOut1(dataWidth-1,0)
-  out_reg(6) := readOut2(dataWidth-1,0)
+  out_reg(3) := readOut1(doutWidth-1,0)
+  out_reg(6) := readOut2(doutWidth-1,0)
       //write memory and read memory
   val readAddr = Mux(count===UFix(imageWidth-3),UFix(0),count+UFix(1))
   row1buf(count) := out_reg(2)
