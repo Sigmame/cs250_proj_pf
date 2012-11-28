@@ -186,9 +186,9 @@ int main (int argc, char* argv[]) {
 
     if (checkOutput)
     {
-      int64_t dout = (int64_t) dut->hsOptFlowTop__io_data_out.lo_word();
+      int64_t dout = (int64_t) dut->hsOptFlowTop__io_data_out_u.lo_word();
 //      int64_t dout = (int64_t) dut->hsOptFlowTop__io_img_out1.lo_word();
-      dout_expected = Ex[checkOutputOffset]; // u, and then v
+      dout_expected = Et[checkOutputOffset]; // u, and then v
 //      dout_expected = outputImages[checkOutputOffset]; // u, and then v
 //      dout_expected = u[checkOutputOffset]; // u, and then v
 //	  if (checkOutputOffset >= imageSize)
@@ -232,10 +232,10 @@ int main (int argc, char* argv[]) {
 
       // outputs
       uint32_t frame_sync_out = dut->hsOptFlowTop__io_frame_sync_out.lo_word();
-      int64_t data_out        = dut->hsOptFlowTop__io_data_out.lo_word();
+      int64_t data_out_u        = dut->hsOptFlowTop__io_data_out_u.lo_word();
   
       printf("cycle: %04d frame_sync_in: %d data_in1: %02x data_in2: %02x frame_sync_out: %d data_out: %02x\n", \
-          cycle, frame_sync_in, data_in1, data_in1, frame_sync_out, data_out);
+          cycle, frame_sync_in, data_in1, data_in1, frame_sync_out, data_out_u);
     }
 
     // write trace output to VCD file
