@@ -12,21 +12,22 @@ class uvCalc(pdWidth: Integer, pdFrac: Integer, dpFrac: Integer, uvWidth: Intege
     val Ex = Fix(INPUT, pdWidth)
     val Ey = Fix(INPUT, pdWidth)
     val Et = Fix(INPUT, pdWidth)
-    val P  = Fix(OUTPUT, pdWidth+uvWidth)
-    val D  = Fix(OUTPUT, pdWidth+uvWidth)
+    val P  = Fix(OUTPUT, pdWidth)
+    val D  = Fix(OUTPUT, pdWidth)
     val uAvg = Fix(INPUT, uvWidth)
     val vAvg = Fix(INPUT, uvWidth)
     val u = Fix(OUTPUT, uvWidth)
     val v = Fix(OUTPUT, uvWidth)
   }
-  val a = UFix(1<<14)
-  io.P := io.Ex * io.uAvg + io.Ey * io.vAvg + io.Et <<UFix(uvFrac) //Frac: 14+16
-  io.D := io.Ex * io.Ex + io.Ey * io.Ey + a*a     //Fract: 14+14
-  P >> UFix(uvFrac)
-  D >> UFix(uvFrac) 
-  val P_D = io.P/io.D //truncate 
-  io.u := io.uAvg - io.Ex * P_D    
-  io.v := io.vAvg - io.Ey * P_D   
+  val a = UFix(1<< uvFrac)
+  val P_pre = io.Ex * io.uAvg + io.Ey * io.vAvg + io.Et << UFix(uvFrac) //Frac: 16+16
+  val D_pre = io.Ex * io.Ex + io.Ey * io.Ey + a*a     //Fract: 16+16
+  io.P := P_pre >> UFix(uvFrac) //Fract: 16
+  io.D := D_pre >> UFix(uvFrac) 
+  val Px = io.Ex * io.P 
+  val Py = io.Ey * io.P  // Fract: 16+16
+  io.u := io.uAvg - Px / io.D      //Fract: 32-16
+  io.v := io.vAvg - Py / io.D   
   }
 
 class uvCalcTest(c: uvCalc) extends Tester(c, Array(c.io)) {
