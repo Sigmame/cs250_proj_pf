@@ -263,23 +263,23 @@ gui_set_time_units 1ps
 # Global: Signal Compare
 
 # Global: Signal Groups
-gui_load_child_values {convolutionFilter}
-gui_load_child_values {convolutionFilterTestHarness}
+gui_load_child_values {hsOptFlowTop}
+gui_load_child_values {hsOptFlowTopTestHarness}
 
 set {Test Harness} {Test Harness}
 gui_sg_create ${Test Harness}
-gui_sg_addsignal -group ${Test Harness} { convolutionFilterTestHarness.cycle convolutionFilterTestHarness.dout_expected convolutionFilterTestHarness.dout_mismatch }
-gui_set_radix -radix {decimal} -signals {convolutionFilterTestHarness.cycle}
-gui_set_radix -radix {twosComplement} -signals {convolutionFilterTestHarness.cycle}
+gui_sg_addsignal -group ${Test Harness} { hsOptFlowTopTestHarness.cycle hsOptFlowTopTestHarness.u_expected hsOptFlowTopTestHarness.Ex_expected hsOptFlowTopTestHarness.dout_mismatch }
+gui_set_radix -radix {decimal} -signals {hsOptFlowTopTestHarness.cycle}
+gui_set_radix -radix {twosComplement} -signals {hsOptFlowTopTestHarness.cycle}
 set Config Config
 gui_sg_create ${Config}
-gui_sg_addsignal -group ${Config} { convolutionFilter.io_coeff_in convolutionFilter.io_config_load convolutionFilter.io_image_height convolutionFilter.io_image_width convolutionFilter.reset }
+gui_sg_addsignal -group ${Config} { hsOptFlowTop.reset }
 set {Image Input} {Image Input}
 gui_sg_create ${Image Input}
-gui_sg_addsignal -group ${Image Input} { convolutionFilter.io_frame_sync_in convolutionFilter.io_data_in }
+gui_sg_addsignal -group ${Image Input} { hsOptFlowTop.io_frame_sync_in hsOptFlowTop.io_data_in1 hsOptFlowTop.io_data_in2}
 set {Image Output} {Image Output}
 gui_sg_create ${Image Output}
-gui_sg_addsignal -group ${Image Output} { convolutionFilter.io_frame_sync_out convolutionFilter.io_data_out }
+gui_sg_addsignal -group ${Image Output} { hsOptFlowTop.io_frame_sync_out hsOptFlowTop.io_data_out_u }
 
 # Global: Highlighting
 
@@ -312,16 +312,16 @@ gui_list_set_filter -id ${Hier.1} -list { {Package 1} {All 1} {Process 1} {Unnam
 gui_list_set_filter -id ${Hier.1} -text {*}
 gui_hier_list_init -id ${Hier.1}
 gui_change_design -id ${Hier.1} -design V1
-catch {gui_list_select -id ${Hier.1} {convolutionFilter}}
+catch {gui_list_select -id ${Hier.1} {hsOptFlowTop}}
 gui_view_scroll -id ${Hier.1} -vertical -set 0
 gui_view_scroll -id ${Hier.1} -horizontal -set 0
 
 # Data 'Data.1'
 gui_list_set_filter -id ${Data.1} -list { {Buffer 1} {Input 1} {Others 1} {Linkage 1} {Output 1} {Parameter 1} {All 1} {Aggregate 1} {Event 1} {Assertion 1} {Constant 1} {Interface 1} {Signal 1} {$unit 1} {Inout 1} {Variable 1} }
 gui_list_set_filter -id ${Data.1} -text {*}
-gui_list_show_data -id ${Data.1} {convolutionFilter}
+gui_list_show_data -id ${Data.1} {hsOptFlowTop}
 gui_show_window -window ${Data.1}
-catch { gui_list_select -id ${Data.1} {convolutionFilter.io_data_out convolutionFilter.io_frame_sync_out }}
+catch { gui_list_select -id ${Data.1} {hsOptFlowTop.io_data_out_u hsOptFlowTop.partialDeriv.io_Ex hsOptFlowTop.io_frame_sync_out }}
 gui_view_scroll -id ${Data.1} -vertical -set 38
 gui_view_scroll -id ${Data.1} -horizontal -set 0
 gui_view_scroll -id ${Hier.1} -vertical -set 0
@@ -349,7 +349,7 @@ gui_list_add_group -id ${Wave.1} -after {New Group} {{Test Harness}}
 gui_list_add_group -id ${Wave.1} -after {New Group} {Config}
 gui_list_add_group -id ${Wave.1} -after {New Group} {{Image Input}}
 gui_list_add_group -id ${Wave.1} -after {New Group} {{Image Output}}
-gui_list_set_insertion_bar  -id ${Wave.1} -group {Image Input}  -item convolutionFilter.io_frame_sync_in -position below
+gui_list_set_insertion_bar  -id ${Wave.1} -group {Image Input}  -item hsOptFlowTop.io_frame_sync_in -position below
 gui_seek_criteria -id ${Wave.1} {Any Edge}
 
 

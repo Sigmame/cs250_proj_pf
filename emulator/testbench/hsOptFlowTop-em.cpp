@@ -40,6 +40,7 @@ int main (int argc, char* argv[]) {
   int fail = 0;
   int imageFailed = 0;
 
+  int64_t img1_expected = 0;
   int64_t u_expected = 0;
   int64_t v_expected = 0;
   int64_t Ex_expected = 0;
@@ -48,7 +49,7 @@ int main (int argc, char* argv[]) {
   int64_t P_expected = 0;
   int64_t D_expected = 0;
 
-  int  dout_mismatch = 0;
+  int dout_mismatch = 0;
 
   // set default values
   imageHeight = DEFAULT_IMAGE_HEIGHT;
@@ -149,6 +150,7 @@ int main (int argc, char* argv[]) {
       // add some extra signals to the vcd file to help debugging
       fprintf(vcdFile, "$scope module hsOptFlowTopTestHarness $end\n");
       fprintf(vcdFile, "$var reg 32 NCYCLE cycle $end\n");
+      fprintf(vcdFile, "$var reg 26 IMG1_EXP img1_expected $end\n");
       fprintf(vcdFile, "$var reg 26 U_EXP u_expected $end\n");
       fprintf(vcdFile, "$var reg 26 V_EXP v_expected $end\n");
       fprintf(vcdFile, "$var reg 26 EX_EXP Ex_expected $end\n");
@@ -156,7 +158,7 @@ int main (int argc, char* argv[]) {
       fprintf(vcdFile, "$var reg 26 ET_EXP Et_expected $end\n");
       fprintf(vcdFile, "$var reg 26 P_EXP P_expected $end\n");
       fprintf(vcdFile, "$var reg 26 D_EXP D_expected $end\n");
-      fprintf(vcdFile, "$var reg 32 MISMATCH dout_mismatch $end\n");
+      fprintf(vcdFile, "$var reg 1 MISMATCH dout_mismatch $end\n");
       fprintf(vcdFile, "$upscope $end\n");
     }
 
@@ -220,7 +222,9 @@ int main (int argc, char* argv[]) {
     {
       int64_t data_out_u = (int64_t) dut->hsOptFlowTop__io_data_out_u.lo_word();
       int64_t data_out_v = (int64_t) dut->hsOptFlowTop__io_data_out_v.lo_word();
+      int64_t out_Ex = (int64_t) dut->hsOptFlowTop_pDeriv__io_Ex.lo_word();
 
+      img1_expected = outputImages[checkOutputOffset];
       u_expected = u[checkOutputOffset]; // expected
       v_expected = v[checkOutputOffset]; 
       Ex_expected = Ex[checkOutputOffset];
@@ -230,10 +234,10 @@ int main (int argc, char* argv[]) {
       D_expected = D[checkOutputOffset];
 
       dout_mismatch = 0;
-      if (data_out_u != u_expected || data_out_v != v_expected)
+      if (out_Ex != Ex_expected)
       {
-        printf("Verification failed at cycle %6d! pixel at offset %5d u_expected: %02x u_actual: %02x \n", cycle, checkOutputOffset, u_expected, data_out_u);
-        printf("Verification failed at cycle %6d! pixel at offset %5d v_expected: %02x v_actual: %02x \n", cycle, checkOutputOffset, v_expected, data_out_v);
+//        printf("Verification failed at cycle %6d! pixel at offset %5d u_expected: %02x u_actual: %02x \n", cycle, checkOutputOffset, u_expected, data_out_u);
+//        printf("Verification failed at cycle %6d! pixel at offset %5d v_expected: %02x v_actual: %02x \n", cycle, checkOutputOffset, v_expected, data_out_v);
         fail = 1;
         imageFailed = 1;
         dout_mismatch = 1;
@@ -270,7 +274,7 @@ int main (int argc, char* argv[]) {
       uint32_t frame_sync_out = dut->hsOptFlowTop__io_frame_sync_out.lo_word();
       int64_t data_out_u        = dut->hsOptFlowTop__io_data_out_u.lo_word();
       int64_t data_out_v        = dut->hsOptFlowTop__io_data_out_v.lo_word();
-  
+
       printf("cycle: %04d frame_sync_in: %d data_in1: %02x data_in2: %02x frame_sync_out: %d data_out_u: %02x data_out_v: %02x\n", \
           cycle, frame_sync_in, data_in1, data_in1, frame_sync_out, data_out_u, data_out_v);
     }
@@ -283,6 +287,7 @@ int main (int argc, char* argv[]) {
       // cycle count
       dat_dump(vcdFile, dat_t<32>(cycle), "NCYCLE");
       // expected value (for verification)
+      dat_dump(vcdFile, dat_t<26>(img1_expected), "IMG1_EXP");
       dat_dump(vcdFile, dat_t<26>(u_expected), "U_EXP");
       dat_dump(vcdFile, dat_t<26>(v_expected), "V_EXP");
       dat_dump(vcdFile, dat_t<26>(Ex_expected), "EX_EXP");
