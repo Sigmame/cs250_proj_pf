@@ -35,7 +35,7 @@ class windowBuf5x5(imageWidth: Integer, dataWidth: Integer) extends Component {
   out_reg(15) := readOut(3*dataWidth-1,2*dataWidth)
   out_reg(20) := readOut(4*dataWidth-1,3*dataWidth)
       //write memory and read memory
-  val readAddr = Mux(count===UFix(imageWidth-5),UFix(0),count+UFix(1))
+  val readAddr = Mux(count===UFix(imageWidth-6),UFix(0),count+UFix(1))
   rowbuf(count) := Cat(out_reg(19),out_reg(14),out_reg(9),out_reg(4)).toUFix()
   readOut := rowbuf(readAddr) 
 

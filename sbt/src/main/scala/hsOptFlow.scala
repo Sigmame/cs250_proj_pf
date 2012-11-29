@@ -56,12 +56,11 @@ class hsOptFlowTop(imageWidth: Integer, imageHeight: Integer, dataWidth: Integer
 // calculate uv: pdWidth, pdFrac, dpFrac, uvWidth, uvFrac
    val iterCalc =  new uvIteration(26, 26, imageWidth, doutWidth, 1024) 
 
-//   val uMem = Mem(imageWidth-1*imageHeight-1, seqRead=true){UFix(width=doutWidth)}
-//   val vMem = Mem(imageWidth-1*imageHeight-1, seqRead=true){UFix(width=doutWidth)}
 //             val x = uvCalculation(2) // the second element
   iterCalc.io.Ex := pDeriv.io.Ex
   iterCalc.io.Ey := pDeriv.io.Ey
   iterCalc.io.Et := pDeriv.io.Et
+
   io.data_out_u := UFix(0)
   io.data_out_v := UFix(0)
   io.data_out_u := Reg(iterCalc.io.u_out.toUFix()) // for test bench debug
