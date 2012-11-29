@@ -46,7 +46,7 @@ void allocateIntermediateVariables(int width, int height)
   Ex = (int64_t*) malloc(sizeof(int64_t)*imageSize); assert(Ex); //x-gradient
   Ey = (int64_t*) malloc(sizeof(int64_t)*imageSize); assert(Ey); //y-gradient
   Et = (int64_t*) malloc(sizeof(int64_t)*imageSize); assert(Et); //time-difference
-  D  = (int64_t*) malloc(sizeof(int64_t)*imageSize); assert(D); //divider term: alpha+Ex^2+Ey^2
+  D  = (int64_t*) malloc(sizeof(int64_t)*imageSize); assert(D); //divider term: alpha^2+Ex^2+Ey^2
 
   u    = (int64_t*) malloc(sizeof(int64_t)*imageSize); assert(u); // u motion vector
   v    = (int64_t*) malloc(sizeof(int64_t)*imageSize); assert(v); // v motion vector
@@ -108,7 +108,7 @@ void convolutionFilter(int32_t *kernel, int radius, uint8_t *in, int64_t *outInt
     for (int x=0; x<width; x++)
     {
 	  outInt[x+y*width] = ((int64_t)in[x+y*width]) << FP_FRACT;
-      int offset = (height-1-y)*width;
+         int offset = (height-1-y)*width;
 	  outInt[x+offset] = ((int64_t)in[x+offset]) << FP_FRACT;
     }
 
@@ -130,14 +130,14 @@ void convolutionFilter(int32_t *kernel, int radius, uint8_t *in, int64_t *outInt
         for (int xx=0;xx<diameter;xx++)
 	      outputInt += (int64_t)in[(x+xx-radius)+((y+yy-radius)*width)] * (int64_t)kernel[pos++];
 
-	  outInt[x+y*width] = outputInt;
+      outInt[x+y*width] = outputInt;
     }
   }
 }
 
 void partialDerivative(int64_t *img1, int64_t *img2, double alpha, int width, int height)
 {
-	int64_t alphaInt = (int64_t)(alpha * FP_SCALE_FACTOR * FP_SCALE_FACTOR);
+	int64_t alphaInt = (int64_t)(alpha * FP_SCALE_FACTOR * alpha * FP_SCALE_FACTOR);
 	int64_t E1, E2, tmpD = 0;
 	for (int y=0;y<height-1;y++)
 	{

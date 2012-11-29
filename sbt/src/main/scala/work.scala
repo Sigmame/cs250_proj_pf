@@ -16,7 +16,7 @@ object Work {
                                  coeffFract = 16,   // number of bits to right of binary point
                                  doutWidth = 26,
                                  iterationNum = 8))
-                        //         pipeStages = args(1).toInt))
+//                                 pipeStages = args(1).toInt))
 
         case "gaussianTest" =>
             chiselMainTest( mainArgs, () => 

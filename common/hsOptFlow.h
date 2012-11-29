@@ -1,5 +1,5 @@
-#ifndef _CONVOLUTION_H
-#define _CONVOLUTION_H
+#ifndef _HSOPTFLOW_H
+#define _HSOPTFLOW_H
 #include <stdint.h>
 #include <stdlib.h>
 
@@ -9,7 +9,6 @@
 using namespace std;
 
 #define WINDOW_SIZE (25)
-//#define FP_WIDTH (30)
 #define FP_FRACT (16) //(16)
 #define FP_SCALE_FACTOR (1 << FP_FRACT)
 #define ITERATION_NUM (1) //(8)

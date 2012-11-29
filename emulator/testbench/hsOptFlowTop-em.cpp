@@ -40,7 +40,14 @@ int main (int argc, char* argv[]) {
   int fail = 0;
   int imageFailed = 0;
 
-  int64_t dout_expected = 0;
+  int64_t u_expected = 0;
+  int64_t v_expected = 0;
+  int64_t Ex_expected = 0;
+  int64_t Ey_expected = 0;
+  int64_t Et_expected = 0;
+  int64_t P_expected = 0;
+  int64_t D_expected = 0;
+
   int  dout_mismatch = 0;
 
   // set default values
@@ -52,8 +59,27 @@ int main (int argc, char* argv[]) {
   FILE *vcdFile = NULL;
   const char *vcdFileName = "trace.vcd";
 
-  //// parse command line options
-  
+  /* parse command line options
+  int ch;
+  opterr = 0;
+  while ((ch = getopt(argc,argv,"t:v:")) != -1)
+  {
+    switch(ch)
+    {
+      // enable text trace output
+      case 't':
+        print_trace = 1;
+        break;
+      // enable vcd file generation
+      case 'v':
+        generate_vcd = 1;
+        break;
+      default:
+        return -1;
+    }
+  }
+  */
+
   // for loading of input images
   int loadImage = 1;
   int loadImageOffset = 0;
@@ -123,8 +149,14 @@ int main (int argc, char* argv[]) {
       // add some extra signals to the vcd file to help debugging
       fprintf(vcdFile, "$scope module hsOptFlowTopTestHarness $end\n");
       fprintf(vcdFile, "$var reg 32 NCYCLE cycle $end\n");
-      fprintf(vcdFile, "$var reg 26 EXPECTED dout_expected $end\n");
-      fprintf(vcdFile, "$var reg 26 MISMATCH dout_mismatch $end\n");
+      fprintf(vcdFile, "$var reg 26 U_EXP u_expected $end\n");
+      fprintf(vcdFile, "$var reg 26 V_EXP v_expected $end\n");
+      fprintf(vcdFile, "$var reg 26 EX_EXP Ex_expected $end\n");
+      fprintf(vcdFile, "$var reg 26 EY_EXP Ey_expected $end\n");
+      fprintf(vcdFile, "$var reg 26 ET_EXP Et_expected $end\n");
+      fprintf(vcdFile, "$var reg 26 P_EXP P_expected $end\n");
+      fprintf(vcdFile, "$var reg 26 D_EXP D_expected $end\n");
+      fprintf(vcdFile, "$var reg 32 MISMATCH dout_mismatch $end\n");
       fprintf(vcdFile, "$upscope $end\n");
     }
 
@@ -186,31 +218,35 @@ int main (int argc, char* argv[]) {
 
     if (checkOutput)
     {
-      int64_t dout = (int64_t) dut->hsOptFlowTop__io_data_out_u.lo_word();
-//      int64_t dout = (int64_t) dut->hsOptFlowTop__io_img_out1.lo_word();
-      dout_expected = Et[checkOutputOffset]; // u, and then v
-//      dout_expected = outputImages[checkOutputOffset]; // u, and then v
-//      dout_expected = u[checkOutputOffset]; // u, and then v
-//	  if (checkOutputOffset >= imageSize)
-//	    dout_expected = v[checkOutputOffset-imageSize];
+      int64_t data_out_u = (int64_t) dut->hsOptFlowTop__io_data_out_u.lo_word();
+      int64_t data_out_v = (int64_t) dut->hsOptFlowTop__io_data_out_v.lo_word();
+
+      u_expected = u[checkOutputOffset]; // expected
+      v_expected = v[checkOutputOffset]; 
+      Ex_expected = Ex[checkOutputOffset];
+      Ey_expected = Ey[checkOutputOffset];
+      Et_expected = Et[checkOutputOffset];
+      P_expected = P[checkOutputOffset];
+      D_expected = D[checkOutputOffset];
 
       dout_mismatch = 0;
-      if (dout != dout_expected)
+      if (data_out_u != u_expected || data_out_v != v_expected)
       {
-        printf("Verification failed at cycle %6d! pixel at offset %5d expected: %02x actual: %02x \n", cycle, checkOutputOffset, dout_expected, dout);
+        printf("Verification failed at cycle %6d! pixel at offset %5d u_expected: %02x u_actual: %02x \n", cycle, checkOutputOffset, u_expected, data_out_u);
+        printf("Verification failed at cycle %6d! pixel at offset %5d v_expected: %02x v_actual: %02x \n", cycle, checkOutputOffset, v_expected, data_out_v);
         fail = 1;
         imageFailed = 1;
         dout_mismatch = 1;
       }
 
       // end of image
-      if(checkOutputOffset == 2*imageSize-1)
+      if(checkOutputOffset == imageSize-1)
       {
         checkOutputCount++;
         if (!imageFailed)
           printf("[PASSED] Image pair %d processed succesfully.\n", checkOutputCount);
         else
-          printf("[FAILED] Filter output for input image %d was incorrect!\n", checkOutputCount);
+          printf("[FAILED] HS_optflow output for input image pair %d was incorrect!\n", checkOutputCount);
   
         imageFailed = 0;
         checkOutputOffset = 0;
@@ -233,9 +269,10 @@ int main (int argc, char* argv[]) {
       // outputs
       uint32_t frame_sync_out = dut->hsOptFlowTop__io_frame_sync_out.lo_word();
       int64_t data_out_u        = dut->hsOptFlowTop__io_data_out_u.lo_word();
+      int64_t data_out_v        = dut->hsOptFlowTop__io_data_out_v.lo_word();
   
-      printf("cycle: %04d frame_sync_in: %d data_in1: %02x data_in2: %02x frame_sync_out: %d data_out: %02x\n", \
-          cycle, frame_sync_in, data_in1, data_in1, frame_sync_out, data_out_u);
+      printf("cycle: %04d frame_sync_in: %d data_in1: %02x data_in2: %02x frame_sync_out: %d data_out_u: %02x data_out_v: %02x\n", \
+          cycle, frame_sync_in, data_in1, data_in1, frame_sync_out, data_out_u, data_out_v);
     }
 
     // write trace output to VCD file
@@ -246,7 +283,14 @@ int main (int argc, char* argv[]) {
       // cycle count
       dat_dump(vcdFile, dat_t<32>(cycle), "NCYCLE");
       // expected value (for verification)
-      dat_dump(vcdFile, dat_t<26>(dout_expected), "EXPECTED");
+      dat_dump(vcdFile, dat_t<26>(u_expected), "U_EXP");
+      dat_dump(vcdFile, dat_t<26>(v_expected), "V_EXP");
+      dat_dump(vcdFile, dat_t<26>(Ex_expected), "EX_EXP");
+      dat_dump(vcdFile, dat_t<26>(Ey_expected), "EY_EXP");
+      dat_dump(vcdFile, dat_t<26>(Et_expected), "ET_EXP");
+      dat_dump(vcdFile, dat_t<26>(P_expected), "P_EXP");
+      dat_dump(vcdFile, dat_t<26>(D_expected), "D_EXP");
+
       // mismatch signal (high when output doesn't match expected output)
       dat_dump(vcdFile, dat_t<1>(dout_mismatch), "MISMATCH");
       
@@ -262,7 +306,7 @@ int main (int argc, char* argv[]) {
   exportOutputVector(uFile, u_out, imageWidth, imageHeight); uFile.close();
   exportOutputVector(vFile, v_out, imageWidth, imageHeight); vFile.close();
   free(inputImages);
-  //free(outputImages);
+  free(outputImages);
   free(Ex); free(Ey); free(Et); free(D);
   free(u); free(v); free(uAvg); free(vAvg); free(P);
   free(u_out); free(v_out);

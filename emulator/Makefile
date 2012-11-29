@@ -31,7 +31,7 @@ window3-test: $(basedir)/src/window3x3.scala
 	cd $(basedir)/sbt ; $(SBT) "project work" "run windowBuf3Test --backend c --compile --targetDir ../emulator/generated-src --genHarness --test"
 
 generated-src/$(MODEL).cpp: $(basedir)/src/*.scala
-	cd $(basedir)/sbt && $(SBT) "project work" "run hsOptFlow ${PIPE_STAGES} --backend c --targetDir ../emulator/generated-src --debug --vcd --Wall"
+	cd $(basedir)/sbt && $(SBT) "project work" "run hsOptFlow --backend c --targetDir ../emulator/generated-src --debug --vcd --Wall"
 
 $(MODEL).o: generated-src/$(MODEL).cpp $(INCLUDES)
 	$(CXX) $(CXXFLAGS) -c $<
@@ -57,7 +57,7 @@ run-debug : $(MODEL)-em
 	./$(MODEL)-em -t
 
 run-trace : $(MODEL)-em
-	-./$(MODEL)-em -v
+	./$(MODEL)-em #-v
 	vcd2vpd -q trace.vcd trace.vpd
 	rm -f trace.vcd
 
