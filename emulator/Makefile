@@ -57,7 +57,7 @@ run-debug : $(MODEL)-em
 	./$(MODEL)-em -t
 
 run-trace : $(MODEL)-em
-	./$(MODEL)-em #-v
+	-./$(MODEL)-em #-v
 	vcd2vpd -q trace.vcd trace.vpd
 	rm -f trace.vcd
 
