@@ -158,7 +158,7 @@ int main (int argc, char* argv[]) {
       fprintf(vcdFile, "$var reg 26 ET_EXP Et_expected $end\n");
       fprintf(vcdFile, "$var reg 26 P_EXP P_expected $end\n");
       fprintf(vcdFile, "$var reg 26 D_EXP D_expected $end\n");
-      fprintf(vcdFile, "$var reg 1 MISMATCH dout_mismatch $end\n");
+      fprintf(vcdFile, "$var reg 32 MISMATCH dout_mismatch $end\n");
       fprintf(vcdFile, "$upscope $end\n");
     }
 
@@ -222,7 +222,7 @@ int main (int argc, char* argv[]) {
     {
       int64_t data_out_u = (int64_t) dut->hsOptFlowTop__io_data_out_u.lo_word();
       int64_t data_out_v = (int64_t) dut->hsOptFlowTop__io_data_out_v.lo_word();
-      int64_t out_Ex = (int64_t) dut->hsOptFlowTop_pDeriv__io_Ex.lo_word();
+//      int64_t out_Ex = (int64_t) dut->hsOptFlowTop_pDeriv__io_Ex.lo_word();
 
       img1_expected = outputImages[checkOutputOffset];
       u_expected = u[checkOutputOffset]; // expected
@@ -233,11 +233,12 @@ int main (int argc, char* argv[]) {
       P_expected = P[checkOutputOffset];
       D_expected = D[checkOutputOffset];
 
+       int mask = (1 << 26) - 1;
       dout_mismatch = 0;
-      if (out_Ex != Ex_expected)
+      if ((data_out_u & mask) != (u_expected & mask))
       {
-//        printf("Verification failed at cycle %6d! pixel at offset %5d u_expected: %02x u_actual: %02x \n", cycle, checkOutputOffset, u_expected, data_out_u);
-//        printf("Verification failed at cycle %6d! pixel at offset %5d v_expected: %02x v_actual: %02x \n", cycle, checkOutputOffset, v_expected, data_out_v);
+        printf("Verification failed at cycle %6d! pixel at offset %5d u_expected: %02x u_actual: %02x \n", cycle, checkOutputOffset, u_expected, data_out_u);
+        printf("Verification failed at cycle %6d! pixel at offset %5d v_expected: %02x v_actual: %02x \n", cycle, checkOutputOffset, v_expected, data_out_v);
         fail = 1;
         imageFailed = 1;
         dout_mismatch = 1;
@@ -297,7 +298,7 @@ int main (int argc, char* argv[]) {
       dat_dump(vcdFile, dat_t<26>(D_expected), "D_EXP");
 
       // mismatch signal (high when output doesn't match expected output)
-      dat_dump(vcdFile, dat_t<1>(dout_mismatch), "MISMATCH");
+      dat_dump(vcdFile, dat_t<32>(dout_mismatch), "MISMATCH");
       
     }
 

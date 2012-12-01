@@ -54,7 +54,7 @@ run : $(MODEL)-em
 
 # no input argu parsing right now, will implement later
 run-debug : $(MODEL)-em
-	./$(MODEL)-em -t
+	./$(MODEL)-em #-t
 
 run-trace : $(MODEL)-em
 	-./$(MODEL)-em #-v

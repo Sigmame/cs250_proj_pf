@@ -268,7 +268,7 @@ gui_load_child_values {hsOptFlowTopTestHarness}
 
 set {Test Harness} {Test Harness}
 gui_sg_create ${Test Harness}
-gui_sg_addsignal -group ${Test Harness} { hsOptFlowTopTestHarness.cycle hsOptFlowTopTestHarness.u_expected hsOptFlowTopTestHarness.Ex_expected hsOptFlowTopTestHarness.dout_mismatch }
+gui_sg_addsignal -group ${Test Harness} { hsOptFlowTopTestHarness.cycle hsOptFlowTopTestHarness.u_expected hsOptFlowTopTestHarness.dout_mismatch }
 gui_set_radix -radix {decimal} -signals {hsOptFlowTopTestHarness.cycle}
 gui_set_radix -radix {twosComplement} -signals {hsOptFlowTopTestHarness.cycle}
 set Config Config
@@ -321,7 +321,7 @@ gui_list_set_filter -id ${Data.1} -list { {Buffer 1} {Input 1} {Others 1} {Linka
 gui_list_set_filter -id ${Data.1} -text {*}
 gui_list_show_data -id ${Data.1} {hsOptFlowTop}
 gui_show_window -window ${Data.1}
-catch { gui_list_select -id ${Data.1} {hsOptFlowTop.io_data_out_u hsOptFlowTop.partialDeriv.io_Ex hsOptFlowTop.io_frame_sync_out }}
+catch { gui_list_select -id ${Data.1} {hsOptFlowTop.io_data_out_u hsOptFlowTop.io_frame_sync_out }}
 gui_view_scroll -id ${Data.1} -vertical -set 38
 gui_view_scroll -id ${Data.1} -horizontal -set 0
 gui_view_scroll -id ${Hier.1} -vertical -set 0
