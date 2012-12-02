@@ -222,7 +222,7 @@ int main (int argc, char* argv[]) {
     {
       int64_t data_out_u = (int64_t) dut->hsOptFlowTop__io_data_out_u.lo_word();
       int64_t data_out_v = (int64_t) dut->hsOptFlowTop__io_data_out_v.lo_word();
-//      int64_t out_Ex = (int64_t) dut->hsOptFlowTop_pDeriv__io_Ex.lo_word();
+      int64_t out_P = (int64_t) dut->hsOptFlowTop_iterCalc_uvCalculation__io_P.lo_word();
 
       img1_expected = outputImages[checkOutputOffset];
       u_expected = u[checkOutputOffset]; // expected
@@ -235,7 +235,7 @@ int main (int argc, char* argv[]) {
 
        int mask = (1 << 26) - 1;
       dout_mismatch = 0;
-      if ((data_out_u & mask) != (u_expected & mask))
+      if ((out_P & mask) != (P_expected & mask))
       {
         printf("Verification failed at cycle %6d! pixel at offset %5d u_expected: %02x u_actual: %02x \n", cycle, checkOutputOffset, u_expected, data_out_u);
         printf("Verification failed at cycle %6d! pixel at offset %5d v_expected: %02x v_actual: %02x \n", cycle, checkOutputOffset, v_expected, data_out_v);

@@ -9,8 +9,8 @@ object Work {
     args(0) match {
         case "hsOptFlow" =>
             chiselMain( mainArgs, () => 
-                new hsOptFlowTop(imageWidth = 584,
-                                 imageHeight = 388,
+                new hsOptFlowTop(imageWidth = 512,
+                                 imageHeight = 256,
                                  dataWidth = 8, 
                                  coeffWidth = 20,  // coefficient width (including sign bit)
                                  coeffFract = 16,   // number of bits to right of binary point

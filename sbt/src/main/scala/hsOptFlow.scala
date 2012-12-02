@@ -65,8 +65,9 @@ class hsOptFlowTop(imageWidth: Integer, imageHeight: Integer, dataWidth: Integer
   io.data_out_v := UFix(0)
   io.data_out_u := Reg(iterCalc.io.u_out.toUFix()) // for test bench debug
   io.data_out_v := Reg(iterCalc.io.v_out.toUFix()) // for test bench debug
-  val f_sync = Reg(control.io.frame_sync_out)
-  io.frame_sync_out := Reg(f_sync)//Reg(control.io.frame_sync_out)
+//  val f_sync = Reg(control.io.frame_sync_out)
+//  io.frame_sync_out := Reg(f_sync)
+  io.frame_sync_out := Reg(control.io.frame_sync_out)
 }
 
 }
