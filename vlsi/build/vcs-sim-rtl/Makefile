@@ -19,8 +19,8 @@ include ../Makefrag
 # Verilog sources
 srcdir = $(basedir)/generated-src
 vsrcs = \
-	$(srcdir)/${MODEL}.${PIPE_STAGES}.v \
-	$(basedir)/testbench/${MODEL}TestHarness_rtl.v \
+	$(srcdir)/hsOptFlowTop.${PIPE_STAGES}.v \
+	$(basedir)/testbench/hsOptFlowTopTestHarness_rtl.v \
 
 # C sources (for testbench)
 csrcdir = $(basedir)/csrc
@@ -76,4 +76,4 @@ all : $(vcs_sim)
 junk += simv* csrc *.vpd *.key DVE* .vcs* timestamp
 
 clean :
-	rm -rf $(junk) *~ \#* *.cmd *.daidir vc_hdrs.h
+	rm -rf $(junk) *~ \#* *.cmd *.daidir vc_hdrs.h u.txt v.txt
