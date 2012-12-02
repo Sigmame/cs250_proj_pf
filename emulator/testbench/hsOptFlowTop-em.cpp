@@ -15,8 +15,8 @@
 #include <sstream>
 using namespace std;
 
-#define DEFAULT_IMAGE_HEIGHT (388)//(388)
-#define DEFAULT_IMAGE_WIDTH (584)//(584)
+#define DEFAULT_IMAGE_HEIGHT (256)//(388)
+#define DEFAULT_IMAGE_WIDTH (512)//(584)
 #define DEFAULT_NUM_IMAGES (1)
 
 extern double *filterKernel;
@@ -105,7 +105,7 @@ int main (int argc, char* argv[]) {
   allocateIntermediateVariables(imageWidth, imageHeight);
 
   // open input/output files [PATH fix]   
-  fstream img1("./testbench/im1_in.txt", ios::in); // test(10*8)|img(388*584) (two different set)
+  fstream img1("./testbench/im1_in.txt", ios::in); 
   fstream img2("./testbench/im2_in.txt", ios::in);
   if(!img1.is_open() || !img2.is_open())
   {
