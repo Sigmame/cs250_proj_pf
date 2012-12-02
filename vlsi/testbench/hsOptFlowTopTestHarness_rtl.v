@@ -1,9 +1,8 @@
 extern void initialize_image_buffers(input reg [31:0] width, input reg [31:0] height);
 extern void generate_input_image();
 extern void generate_output_image();
-extern void get_input_pixel  (input reg [31:0] offset, output reg [31:0] dout);
-extern void get_output_pixel (input reg [31:0] offset, output reg [31:0] dout);
-extern void get_conv_mask (input reg [31:0] offset, output reg [31:0] dout);
+extern void get_input_pixel  (input reg [31:0] offset, output reg [31:0] dout_1, output reg [31:0] dout_2);
+extern void get_output_pixel (input reg [31:0] offset, output reg [31:0] dout_u, output reg [31:0] dout_v);
 
 `define IMAGE_WIDTH 584
 `define IMAGE_HEIGHT 388
@@ -33,7 +32,8 @@ module hsOptFlowTopTestHarness_rtl;
   wire [7:0] #`INPUT_DELAY data_in1 = data_in1_reg;
   wire [7:0] #`INPUT_DELAY data_in2 = data_in2_reg;
 
-  wire [`FP_WIDTH-1:0] data_out;
+  wire [`FP_WIDTH-1:0] data_out_u;
+  wire [`FP_WIDTH-1:0] data_out_v;
   wire frame_sync_out;
 
   hsOptFlowTop hsOptFlow_dut
@@ -49,7 +49,8 @@ module hsOptFlowTopTestHarness_rtl;
     .io_data_in2          (data_in2),
 
     .io_frame_sync_out    (frame_sync_out),
-    .io_data_out          (data_out)
+    .io_data_out_u        (data_out_u),
+    .io_data_out_v        (data_out_v)
   );
 
   // get command line options, initialize simulation
@@ -123,12 +124,15 @@ module hsOptFlowTopTestHarness_rtl;
   reg [31:0] input_offset = 32'd0;
   reg [31:0] output_offset = 32'd0;
   reg [31:0] data_in32_1;
-  reg [31:0] data_in32_2
-  reg [31:0] correct_dout = 32'd0;
+  reg [31:0] data_in32_2;
+  reg [31:0] correct_dout_u = 32'd0;
+  reg [31:0] correct_dout_v = 32'd0;
   reg [31:0] image_count = 32'd0;
 
   always @(posedge clk)
   begin
+    if (cycle_count >= 4)
+    begin
       if (input_offset == 0)
       begin
         // generate a new random test input image
@@ -139,8 +143,7 @@ module hsOptFlowTopTestHarness_rtl;
         frame_sync_in_reg <= 1'b0;
 
       // get value of input image at specified offset
-      get_input_pixel(input_offset, data_in32_1);
-      get_input_pixel(input_offset+`IMAGE_SIZE, data_in32_2);
+      get_input_pixel(input_offset, data_in32_1, data_in32_2);
       data_in1_reg <= data_in32_1[7:0];
       data_in2_reg <= data_in32_2[7:0];
 
@@ -159,23 +162,23 @@ module hsOptFlowTopTestHarness_rtl;
       if (started || frame_sync_out)
       begin
         // get value of expected output image at specified offset
-        get_output_pixel(output_offset, correct_dout);
-        if (data_out == correct_dout[7:0])
+        get_output_pixel(output_offset, correct_dout_u, correct_dout_v);
+        if (data_out_u == correct_dout_u[`FP_WIDTH-1:0])
           mismatch <= 1'b0;
         else
         begin
-          $display("ERROR: Mismatch at cycle %d : expected %02x : actual %02x", cycle_count, correct_dout, data_out);
+          $display("ERROR: Mismatch at cycle %d : expected %02x : actual %02x", cycle_count, correct_dout_u, data_out_u);
           failed <= 1'b1;
           image_failed <= 1'b1;
           mismatch <= 1'b1;
         end
 
-        if (output_offset == `IMAGE_SIZE*2-1)
+        if (output_offset == `IMAGE_SIZE-1)
         begin
           if (image_failed)
-            $display("[FAILED] Filter output for input image %d was incorrect!", image_count+1);
+            $display("[FAILED] Filter output for input image pair %d was incorrect!", image_count+1);
           else
-            $display("[PASSED] Image %d processed succesfully.", image_count+1);
+            $display("[PASSED] Image pair %d processed succesfully.", image_count+1);
 
           image_failed <= 1'b0;
 
@@ -189,6 +192,7 @@ module hsOptFlowTopTestHarness_rtl;
         else
           output_offset <= output_offset + 1;
       end
+    end
   end
 
 endmodule

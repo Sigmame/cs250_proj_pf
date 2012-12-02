@@ -50,13 +50,11 @@ extern "C" {
   {
     assert(imageSize > 0);
     // open input/output files [PATH fix]   
-    fstream img1("./testbench/im1_in.txt", ios::in); // test(10*8)|img(388*584) (two different set)
-    fstream img2("./testbench/im2_in.txt", ios::in);
+    fstream img1("../../testbench/im1_in.txt", ios::in); // test(10*8)|img(388*584) (two different set)
+    fstream img2("../../testbench/im2_in.txt", ios::in);
     if(!img1.is_open() || !img2.is_open())
-    {
       cout << "Image file(s) not found!\n";
-      return -1;
-    }
+
     importInputImage(img1, inputImages, imageSize); img1.close();
     importInputImage(img2, &inputImages[imageSize], imageSize); img2.close();
   }
@@ -76,44 +74,47 @@ extern "C" {
     fstream uFile("u.txt", ios::out);
     fstream vFile("v.txt", ios::out);
     if(!uFile.is_open() || !vFile.is_open())
-    {
 	cout << "No file(s) open for write!\n";
-	return -1;
-    }
+
     exportOutputVector(uFile, u_out, imageWidth, imageHeight); uFile.close();
     exportOutputVector(vFile, v_out, imageWidth, imageHeight); vFile.close();
   }
 
-  void get_input_pixel(const vec32* offset, /* OUTPUT*/ vec32 *dout)
+  void get_input_pixel(const vec32* offset, /* OUTPUT*/ vec32 *dout_1, /* OUTPUT*/ vec32 *dout_2)
   {
     if (offset->c != 0) // x's or z's on the input signal
     {
-      dout->c = 0xFFFFFFFF;
-      dout->d = 0;
+      dout_1->c = 0xFFFFFFFF;
+      dout_1->d = 0;
+      dout_2->c = 0xFFFFFFFF;
+      dout_2->d = 0;
     }
     else
     {
       assert(offset->d < imageSize);
-      dout->c = 0;
-      dout->d = inputImages[offset->d];
+      dout_1->c = 0;
+      dout_1->d = inputImages[offset->d];
+      dout_2->c = 0;
+      dout_2->d = inputImages[imageSize + offset->d];
     }
   }
 
-  void get_output_pixel(const vec32* offset, /* OUTPUT*/ vec32 *dout)
+  void get_output_pixel(const vec32* offset, /* OUTPUT*/ vec32 *dout_u, /* OUTPUT*/ vec32 *dout_v)
   {
     if (offset->c != 0) // x's or z's on the input signal
     {
-      dout->c = 0xFFFFFFFF;
-      dout->d = 0;
+      dout_u->c = 0xFFFFFFFF;
+      dout_v->d = 0;
+      dout_u->c = 0xFFFFFFFF;
+      dout_v->d = 0;
     }
     else
     {
-      assert(offset->d < imageSize*2);
-      dout->c = 0;
-      if (offset < imageSize)
-	 dout->d = u[offset->d];
-      else
-	 dout->d = v[offset->d - imageSize];
+      assert(offset->d < imageSize);
+      dout_u->c = 0;
+      dout_u->d = u[offset->d];
+      dout_v->c = 0;
+      dout_v->d = v[offset->d];
     }
   }
 

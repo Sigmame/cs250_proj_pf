@@ -12,7 +12,7 @@ vlsidir = vlsi
 include $(basedir)/../Makefrag
 
 ifndef CLOCK_PERIOD
-CLOCK_PERIOD=1.0
+CLOCK_PERIOD=4.0
 endif
 
 ifndef VOLTAGE
