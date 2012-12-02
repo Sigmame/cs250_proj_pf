@@ -1,0 +1,8 @@
+Warning: Design 'hsOptFlowTop' has '5' unresolved references. For more detailed information, use the "link" command. (UID-341)
+Information: Checking out the license 'DesignWare'. (SEC-104)
+Analyzing datapath extraction ...
+
+.
+Information: Operator associated with resources 'add_1609 add_1605' in design 'uvCalc' breaks the datapath block because there is leakage due to truncation on its fanout.  (HDL-120)
+Information: Building the design 'SRAM1R1W512x32'. (HDL-193)
+1

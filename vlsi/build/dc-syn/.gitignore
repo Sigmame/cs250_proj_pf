@@ -1,0 +1,11 @@
+current-dc
+build*/results
+build*/log
+build*/WORK
+build*/hsOptFlowTop_LIB
+build*/*.tcl
+build*/*.tab
+build*/*.log
+build*/*.ucli
+build*/Makefrag
+build*/timestamp

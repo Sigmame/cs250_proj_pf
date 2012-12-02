@@ -167,7 +167,7 @@ module hsOptFlowTopTestHarness_rtl;
           mismatch <= 1'b0;
         else
         begin
-          $display("ERROR: Mismatch at cycle %d : expected %02x : actual %02x", cycle_count, correct_dout_u, data_out_u);
+          $display("ERROR: Mismatch at cycle %d : expected %02x : actual %02x", cycle_count, correct_dout_u[`FP_WIDTH-1:0], data_out_u);
           failed <= 1'b1;
           image_failed <= 1'b1;
           mismatch <= 1'b1;

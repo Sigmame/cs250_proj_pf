@@ -236,7 +236,7 @@ int main (int argc, char* argv[]) {
 
        int mask = (1 << 26) - 1;
       dout_mismatch = 0;
-      if ((data_out_u & mask) != (u_expected & mask))
+      if ((data_out_u & mask) != (u_expected & mask) || (data_out_v & mask) != (v_expected & mask))
       {
         printf("Verification failed at cycle %6d! pixel at offset %5d u_expected: %02x u_actual: %02x \n", cycle, checkOutputOffset, u_expected, data_out_u);
         printf("Verification failed at cycle %6d! pixel at offset %5d v_expected: %02x v_actual: %02x \n", cycle, checkOutputOffset, v_expected, data_out_v);
