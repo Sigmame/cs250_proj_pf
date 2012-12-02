@@ -56,7 +56,6 @@ class hsOptFlowTop(imageWidth: Integer, imageHeight: Integer, dataWidth: Integer
   iterCalc.io.Ey := pDeriv.io.Ey
   iterCalc.io.Et := pDeriv.io.Et
 
-<<<<<<< HEAD
   //connect to uvMem for all the uv data
 //  val uMem = new uvMem(imageWidth, imageHeight, doutWidth, memWidth)
 //  val vMem = new uvMem(imageWidth, imageHeight, doutWidth, memWidth)
@@ -74,15 +73,6 @@ class hsOptFlowTop(imageWidth: Integer, imageHeight: Integer, dataWidth: Integer
   io.data_out_v := Reg(Mux(dout_select_uv, iterCalc.io.v_out, UFix(0))).toUFix
   val f_sync = Reg(control.io.frame_sync_out)
   io.frame_sync_out := Reg(f_sync) //Reg(control.io.frame_sync_out)
-=======
-  io.data_out_u := UFix(0)
-  io.data_out_v := UFix(0)
-  io.data_out_u := Reg(iterCalc.io.u_out.toUFix()) // for test bench debug
-  io.data_out_v := Reg(iterCalc.io.v_out.toUFix()) // for test bench debug
-//  val f_sync = Reg(control.io.frame_sync_out)
-//  io.frame_sync_out := Reg(f_sync)
-  io.frame_sync_out := Reg(control.io.frame_sync_out)
->>>>>>> 153ca868458e67677e81be283bdec49e6ea37d73
 }
 
 }
