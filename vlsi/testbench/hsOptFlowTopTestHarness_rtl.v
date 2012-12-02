@@ -4,8 +4,8 @@ extern void generate_output_image();
 extern void get_input_pixel  (input reg [31:0] offset, output reg [31:0] dout_1, output reg [31:0] dout_2);
 extern void get_output_pixel (input reg [31:0] offset, output reg [31:0] dout_u, output reg [31:0] dout_v);
 
-`define IMAGE_WIDTH 584
-`define IMAGE_HEIGHT 388
+`define IMAGE_WIDTH 512
+`define IMAGE_HEIGHT 256
 `define IMAGE_SIZE `IMAGE_WIDTH * `IMAGE_HEIGHT
 `define FP_WIDTH 26
 

@@ -50,7 +50,7 @@ extern "C" {
   {
     assert(imageSize > 0);
     // open input/output files [PATH fix]   
-    fstream img1("../../testbench/im1_in.txt", ios::in); // test(10*8)|img(388*584) (two different set)
+    fstream img1("../../testbench/im1_in.txt", ios::in); 
     fstream img2("../../testbench/im2_in.txt", ios::in);
     if(!img1.is_open() || !img2.is_open())
       cout << "Image file(s) not found!\n";

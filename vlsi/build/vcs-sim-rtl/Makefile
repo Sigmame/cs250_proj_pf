@@ -48,7 +48,7 @@ $(vcs_sim) : Makefile $(vsrcs) $(csrcs)
 	+define+CLOCK_PERIOD=$(vcs_clock_period) \
 	+define+INPUT_DELAY=$(input_delay) \
 	+define+OUTPUT_DELAY=$(output_delay) \
-        -v $(refdir)/SRAM1R1W1024x32.v \
+        -v $(refdir)/SRAM1R1W512x32.v \
 	$(vsrcs) $(csrcs)
 
 #--------------------------------------------------------------------
