@@ -6,28 +6,27 @@ import scala.collection.mutable.HashMap
 import scala.collection.mutable.ArrayBuffer
 import scala.util.Random
 
-class gaussian(windowSize: Integer, dataWidth: Integer, coeffWidth: Integer, coeffFract: Integer, doutWidth: Integer) extends Component {
+class gaussian(windowSize: Integer, dataWidth: Integer, fractWidth: Integer, doutWidth: Integer) extends Component {
   val io = new Bundle {
     val din   = Vec(windowSize) { UFix(dir = INPUT, width = dataWidth) }
-//    val coeff = Vec(windowSize) { UFix(dir = INPUT, width = coeffWidth) }
     val dout = UFix(OUTPUT, doutWidth)
   }
-  val p = Vec(windowSize){UFix(width=coeffWidth+dataWidth)}
-  val product = Vec(windowSize){UFix(width=coeffWidth+dataWidth+1)}
-  val add0  = Vec((windowSize-1)/2){UFix(width=coeffWidth+dataWidth+1)}
-  val add1  = Vec((windowSize-1)/4){UFix(width=coeffWidth+dataWidth+1)}
-  val add2  = Vec((windowSize-1)/8){UFix(width=coeffWidth+dataWidth+1)}
-  val add3  = Vec(2){UFix(width=coeffWidth+dataWidth+1)}
-  val coeff = Vec(windowSize){UFix(width=coeffWidth)}
+  val p = Vec(windowSize){UFix(width=fractWidth+dataWidth)}
+  val product = Vec(windowSize){UFix(width=fractWidth+dataWidth+1)}
+  val add0  = Vec((windowSize-1)/2){UFix(width=fractWidth+dataWidth+1)}
+  val add1  = Vec((windowSize-1)/4){UFix(width=fractWidth+dataWidth+1)}
+  val add2  = Vec((windowSize-1)/8){UFix(width=fractWidth+dataWidth+1)}
+  val add3  = Vec(2){UFix(width=fractWidth+dataWidth+1)}
+  val coeff = Vec(windowSize){UFix(width=fractWidth)}
   // set coefficient 
-  coeff(0) := UFix(1139)  //(71)
-  coeff(1) := UFix(2279)  //(142)
-  coeff(2) := UFix(2849)  //(178)
+  coeff(0) := UFix(1139)  
+  coeff(1) := UFix(2279) 
+  coeff(2) := UFix(2849)
   coeff(3) := UFix(2279)
   coeff(4) := UFix(1139)
   coeff(5) := UFix(2279)
-  coeff(6) := UFix(5128) //(320)
-  coeff(7) := UFix(6838) //(427)
+  coeff(6) := UFix(5128)
+  coeff(7) := UFix(6838)
   coeff(8) := UFix(5128)
   coeff(9) := UFix(2279)
   coeff(10) := UFix(2849)
@@ -49,7 +48,7 @@ class gaussian(windowSize: Integer, dataWidth: Integer, coeffWidth: Integer, coe
   for (i<-0 until windowSize){
     p(i) := coeff(i)*io.din(i)
   // sign extend
-    product(i) = Cat(p(i)(coeffWidth+dataWidth-1),p(i)(coeffWidth+dataWidth-1,0))}
+    product(i) = Cat(p(i)(fractWidth+dataWidth-1),p(i)(fractWidth+dataWidth-1,0))}
   for (i<-0 until (windowSize-1)/2){
     add0(i) := product(2*i) + product(2*i+1)}
   for (i<-0 until (windowSize-1)/4){
@@ -58,13 +57,7 @@ class gaussian(windowSize: Integer, dataWidth: Integer, coeffWidth: Integer, coe
     add2(i) := add1(2*i)+add1(2*i+1)}
   add3(0) := add2(0)+add2(1)
   add3(1) := add2(2)+product(windowSize-1)
-  // rounding
-  val temp = add3(0)+add3(1) 
-  // overflow = truncate sum to int
-//  val overflow = temp(coeffWidth+dataWidth,coeffFract+dataWidth)
-  val saturation = Mux(temp(coeffWidth+dataWidth)===UFix(1),UFix(0,doutWidth),UFix( 16777216,doutWidth)) 
- // io.dout := Mux(overflow === UFix(0),temp(coeffFract+dataWidth+1,0),saturation)
-  io.dout := temp //(coeffFract+dataWidth+1,0)
+  io.dout := add3(0)+add3(1) //temp //(coeffFract+dataWidth+1,0)
 
  }
 

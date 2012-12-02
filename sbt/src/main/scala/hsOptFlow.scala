@@ -4,22 +4,18 @@ import Chisel._
 import Node._
 import scala.collection.mutable.ArrayBuffer
 
-class hsOptFlow_io(windowSize: Integer, dataWidth: Integer, coeffWidth: Integer, dimWidth: Integer, doutWidth: Integer) extends Bundle() {
+class hsOptFlow_io(windowSize: Integer, dataWidth: Integer, doutWidth: Integer) extends Bundle() {
   val data_in1       = UFix(INPUT, dataWidth)
   val data_in2       = UFix(INPUT, dataWidth)
   val frame_sync_in  = Bits(INPUT, 1)
-
-//  val image_width    = UFix(INPUT, dimWidth)
-//  val image_height   = UFix(INPUT, dimWidth)
   val data_out_u       = UFix(OUTPUT,doutWidth)  //doutWidth = 9.16 + sign = 26
   val data_out_v       = UFix(OUTPUT,doutWidth)  //doutWidth = 9.16 + sign = 26
   val frame_sync_out = Bits(OUTPUT,1)
 }
 
-class hsOptFlowTop(imageWidth: Integer, imageHeight: Integer, dataWidth: Integer, coeffWidth: Integer, coeffFract: Integer, doutWidth : Integer, iterationNum: Integer) extends Component {
+class hsOptFlowTop(imageWidth: Integer, imageHeight: Integer, dataWidth: Integer, doutWidth : Integer, fractWidth : Integer, memWidth: Integer, iterationNum: Integer) extends Component {
   val windowSize = 25
-  val dimWidth = scala.math.max(log2Up(imageWidth), log2Up(imageHeight))
-  val io = new hsOptFlow_io(windowSize, dataWidth, coeffWidth, dimWidth, doutWidth);
+  val io = new hsOptFlow_io(windowSize, dataWidth, doutWidth);
  
 // Control 
   val control = new control(imageWidth, imageHeight)
@@ -34,39 +30,49 @@ class hsOptFlowTop(imageWidth: Integer, imageHeight: Integer, dataWidth: Integer
   val wbuf2_out = winBuf5x5_2.io.dout(12)
 
 // Two Gaussian Filter (windowSize, dataWidth, coeffWidth, coeffFract)
-  val gaussianF1 = new gaussian(25, 8, 16, 16, 25)
-  val gaussianF2 = new gaussian(25, 8, 16, 16, 25)
+  val gaussianF1 = new gaussian(25, dataWidth, fractWidth, doutWidth-1)
+  val gaussianF2 = new gaussian(25, dataWidth, fractWidth, doutWidth-1)
   gaussianF1.io.din := winBuf5x5_1.io.dout 
   gaussianF2.io.din := winBuf5x5_2.io.dout 
 // Two Mux for detecting edge
-  val data_g1 = Mux(control.io.dout_select, gaussianF1.io.dout, wbuf1_out << UFix(coeffFract))
-  val data_g2 = Mux(control.io.dout_select, gaussianF2.io.dout, wbuf2_out << UFix(coeffFract))
+  val data_g1 = Mux(control.io.dout_select, gaussianF1.io.dout, wbuf1_out << UFix(fractWidth))
+  val data_g2 = Mux(control.io.dout_select, gaussianF2.io.dout, wbuf2_out << UFix(fractWidth))
 
 // One 2x2x2 windowBuf for partial derivative
 // imageWidth, dataWidth, memWidth
-  val winBuf2x2x2 = new windowBuf2x2x2(imageWidth, 26, 32)
+  val winBuf2x2x2 = new windowBuf2x2x2(imageWidth, doutWidth, memWidth)
   winBuf2x2x2.io.din1 := Cat(UFix(0,1),data_g1) //data_g1
   winBuf2x2x2.io.din2 := Cat(UFix(0,1),data_g2) //data_g2
 
 // One partial Derivative module: windowSize, dataWidth, pdWidth
-  val pDeriv = new partialDeriv(8, 26, 26)
+  val pDeriv = new partialDeriv(8, doutWidth)
   pDeriv.io.din := winBuf2x2x2.io.dout
 
 
 // calculate uv: pdWidth, pdFrac, dpFrac, uvWidth, uvFrac
-   val iterCalc =  new uvIteration(26, 26, imageWidth, doutWidth, 1024) 
-
-//             val x = uvCalculation(2) // the second element
+   val iterCalc =  new uvIteration(doutWidth, fractWidth, imageWidth, memWidth) 
+//connect iteration calculation block
   iterCalc.io.Ex := pDeriv.io.Ex
   iterCalc.io.Ey := pDeriv.io.Ey
   iterCalc.io.Et := pDeriv.io.Et
 
-  io.data_out_u := UFix(0)
-  io.data_out_v := UFix(0)
-  io.data_out_u := Reg(iterCalc.io.u_out.toUFix()) // for test bench debug
-  io.data_out_v := Reg(iterCalc.io.v_out.toUFix()) // for test bench debug
+  //connect to uvMem for all the uv data
+//  val uMem = new uvMem(imageWidth, imageHeight, doutWidth, memWidth)
+//  val vMem = new uvMem(imageWidth, imageHeight, doutWidth, memWidth)
+//  uMem.io.din_u := iterCalc.io.u_out.toUFix()
+//  vMem.io.din_v := iterCalc.io.v_out.toUFix()
+  iterCalc.io.u_in := UFix(0) //uMem.io.dout_u
+  iterCalc.io.v_in := UFix(0) //vMem.io.dout_v
+//  uMem.io.uv_sync_out := io.frame_sync_out
+//  vMem.io.uv_sync_out := io.frame_sync_out
+//data output  
+ // io.data_out_u := UFix(0)
+ // io.data_out_v := UFix(0)
+  val dout_select_uv = Reg(control.io.dout_select_uv)
+  io.data_out_u := Reg(Mux(dout_select_uv, iterCalc.io.u_out, UFix(0))).toUFix 
+  io.data_out_v := Reg(Mux(dout_select_uv, iterCalc.io.v_out, UFix(0))).toUFix
   val f_sync = Reg(control.io.frame_sync_out)
-  io.frame_sync_out := Reg(f_sync)//Reg(control.io.frame_sync_out)
+  io.frame_sync_out := Reg(f_sync) //Reg(control.io.frame_sync_out)
 }
 
 }

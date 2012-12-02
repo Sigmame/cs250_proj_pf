@@ -6,24 +6,23 @@ import scala.collection.mutable.HashMap
 import scala.collection.mutable.ArrayBuffer
 import scala.util.Random
 
-class uvCalc(pdWidth: Integer, pdFrac: Integer, dpFrac: Integer, uvWidth: Integer, uvFrac: Integer) extends Component {
+class uvCalc(doutWidth: Integer, fractWidth: Integer) extends Component {
   val io = new Bundle {
-//    val din   = Vec(windowSize) { UFix(dir = INPUT, width = dataWidth) }
-    val Ex = Fix(INPUT, pdWidth)
-    val Ey = Fix(INPUT, pdWidth)
-    val Et = Fix(INPUT, pdWidth)
-    val P  = Fix(OUTPUT, pdWidth)
-    val D  = Fix(OUTPUT, pdWidth)
-    val uAvg = Fix(INPUT, uvWidth)
-    val vAvg = Fix(INPUT, uvWidth)
-    val u = Fix(OUTPUT, uvWidth)
-    val v = Fix(OUTPUT, uvWidth)
+    val Ex = Fix(INPUT, doutWidth)
+    val Ey = Fix(INPUT, doutWidth)
+    val Et = Fix(INPUT, doutWidth)
+    val P  = Fix(OUTPUT, 32)
+    val D  = Fix(OUTPUT, 32)
+    val uAvg = Fix(INPUT, doutWidth)
+    val vAvg = Fix(INPUT, doutWidth)
+    val u = Fix(OUTPUT, doutWidth)
+    val v = Fix(OUTPUT, doutWidth)
   }
-  val a = UFix(1<< uvFrac)
-  val P_pre = io.Ex * io.uAvg + io.Ey * io.vAvg + io.Et << UFix(uvFrac) //Frac: 16+16
+  val a = UFix(1<< fractWidth)
+  val P_pre = io.Ex * io.uAvg + io.Ey * io.vAvg + io.Et << UFix(fractWidth) //Frac: 16+16
   val D_pre = io.Ex * io.Ex + io.Ey * io.Ey + a*a     //Fract: 16+16
-  io.P := P_pre >> UFix(uvFrac) //Fract: 16
-  io.D := D_pre >> UFix(uvFrac) 
+  io.P := P_pre >> UFix(fractWidth) //Fract: 16
+  io.D := D_pre >> UFix(fractWidth) 
   val Px = io.Ex * io.P 
   val Py = io.Ey * io.P  // Fract: 16+16
   io.u := io.uAvg - Px / io.D      //Fract: 32-16

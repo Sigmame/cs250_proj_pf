@@ -6,12 +6,12 @@ import scala.collection.mutable.HashMap
 import scala.collection.mutable.ArrayBuffer
 import scala.util.Random
 
-class partialDeriv(windowSize: Integer, dataWidth: Integer, pdWidth: Integer) extends Component {
+class partialDeriv(windowSize: Integer, doutWidth: Integer) extends Component {
   val io = new Bundle {
-    val din   = Vec(windowSize) { Fix(dir = INPUT, width = dataWidth) }
-    val Ex = Fix(OUTPUT, pdWidth)
-    val Ey = Fix(OUTPUT, pdWidth)
-    val Et = Fix(OUTPUT, pdWidth)
+    val din   = Vec(windowSize) { Fix(dir = INPUT, width = doutWidth) }
+    val Ex = Fix(OUTPUT, doutWidth)
+    val Ey = Fix(OUTPUT, doutWidth)
+    val Et = Fix(OUTPUT, doutWidth)
   }
 
 //im1(i,j+1)-im1(i,j)+im1(i+1,j+1)-im1(i+1,j);

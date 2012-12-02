@@ -14,8 +14,8 @@ class windowBuf3x3(imageWidth: Integer, doutWidth: Integer, memWidth : Integer) 
     val dout = Vec(windowSize) { UFix(dir = OUTPUT, width = doutWidth) }
   }
   //instantiate SRAM 1024x32 (4*8bit)
-  val row1buf = Mem(imageWidth,seqRead=true){UFix(width=doutWidth)}
-  val row2buf = Mem(imageWidth,seqRead=true){UFix(width=doutWidth)}
+  val row1buf = Mem(imageWidth,seqRead=true){UFix(width=memWidth)}
+  val row2buf = Mem(imageWidth,seqRead=true){UFix(width=memWidth)}
   val readOut1 = Reg(resetVal = UFix(0,doutWidth))
   val readOut2 = Reg(resetVal = UFix(0,doutWidth))
   val out_reg = Vec(windowSize){Reg(resetVal = UFix(0,doutWidth))}

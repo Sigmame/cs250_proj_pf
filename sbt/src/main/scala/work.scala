@@ -9,34 +9,30 @@ object Work {
     args(0) match {
         case "hsOptFlow" =>
             chiselMain( mainArgs, () => 
-                new hsOptFlowTop(imageWidth = 584,
-                                 imageHeight = 388,
+                new hsOptFlowTop(imageWidth = 512,
+                                 imageHeight = 256,
                                  dataWidth = 8, 
-                                 coeffWidth = 20,  // coefficient width (including sign bit)
-                                 coeffFract = 16,   // number of bits to right of binary point
                                  doutWidth = 26,
+                                 fractWidth = 16,
+                                 memWidth = 32,
                                  iterationNum = 8))
-//                                 pipeStages = args(1).toInt))
 
         case "gaussianTest" =>
             chiselMainTest( mainArgs, () => 
                 new gaussian(windowSize = 25,
                                  dataWidth = 8,
-                                 coeffWidth = 16,
-                                 coeffFract = 16,
+                                 fractWidth = 16,
                                  doutWidth = 26)) { c => new gaussianTest(c) }
 
         case "partialDerivTest" =>
             chiselMainTest( mainArgs, () => 
                 new partialDeriv(windowSize = 8,
-                                 dataWidth = 16,
-                                 pdWidth = 16) ) { c => new partialDerivTest(c) }
+                                 doutWidth = 16) ) { c => new partialDerivTest(c) }
 
         case "uvCalcTest" =>
             chiselMainTest( mainArgs, () =>
-                new uvCalc(pdWidth = 26, pdFrac = 16, 
-                           dpFrac = 32,
-                           uvWidth = 26, uvFrac = 16) ) { c => new uvCalcTest(c)}
+                new uvCalc(doutWidth = 26,
+                           fractWidth = 16) ) { c => new uvCalcTest(c)}
       
         case "uvAvgTest" =>
             chiselMainTest( mainArgs, () =>
