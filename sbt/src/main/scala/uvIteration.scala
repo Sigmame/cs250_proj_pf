@@ -26,12 +26,12 @@ class uvIteration(doutWidth: Integer, fractWidth: Integer, imageWidth: Integer, 
   uvCalculation.io.Ex := io.Ex
   uvCalculation.io.Ey := io.Ey
   uvCalculation.io.Et := io.Et
-  uvCalculation.io.uAvg := Mux(iterIs0, UFix(0), uvAverage.io.uAvg.toUFix())
-  uvCalculation.io.vAvg := Mux(iterIs0, UFix(0), uvAverage.io.vAvg.toUFix())
+  uvCalculation.io.uAvg := uvAverage.io.uAvg.toUFix()
+  uvCalculation.io.vAvg := uvAverage.io.vAvg.toUFix()
   uvAverage.io.uin := winBuf3_u.io.dout 
   uvAverage.io.vin := winBuf3_v.io.dout
-  winBuf3_u.io.din := io.u_in.toUFix() //uvCalculation.io.u.toUFix()
-  winBuf3_v.io.din := io.v_in.toUFix()  //uvCalculation.io.v.toUFix()
+  winBuf3_u.io.din := Mux(iterIs0, UFix(0), io.u_in.toUFix()) //uvCalculation.io.u.toUFix()
+  winBuf3_v.io.din := Mux(iterIs0, UFix(0), io.v_in.toUFix()) //uvCalculation.io.u.toUFix()
   io.u_out := uvCalculation.io.u//winBuf3_u.io.dout(5)
   io.v_out := uvCalculation.io.v//winBuf3_v.io.dout(5)
   }
