@@ -59,7 +59,7 @@ class control(imageWidth: Integer, imageHeight: Integer) extends Component {
       io.frame_sync_out := Bits(0)
       when (count_x === UFix(imageWidth-1) && coor_y === UFix(imageHeight-1)){
         count_x := UFix(0,log2Up(imageWidth))
-        count_y := UFix(0,log2Up(imageHeight))
+        count_y := count_y + UFix(1) 
         state:=BUF_GAUSSIAN}
   }
 

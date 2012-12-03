@@ -71,7 +71,25 @@ def gen_mem(name, width, depth, ports):
 endmodule\n" % (name, ',\n  '.join(port_spec), '\n  '.join(decl),
                 '\n    '.join(sequential), '\n  '.join(combinational))
 
-  if depth == 512 and width == 32 and (ports[0] == 'write' and ports[1] == 'read'):
+  if depth == 131072 and width == 32 and (ports[0] == 'write' and ports[1] == 'read'):
+    s = "module %s(\n\
+    %s\n\
+  );\n\
+  SRAM1R1W131072x32 sram (\n\
+    .CE1(CLK),\n\
+    .OEB1(~CS1),\n\
+    .CSB1(~CS1),\n\
+    .A1(A1),\n\
+    .O1(O1),\n\
+    .CE2(CLK),\n\
+    .WEB2(~WE0),\n\
+    .CSB2(~CS0),\n\
+    .A2(A0),\n\
+    .I2(I0)\n\
+  );\n\
+  endmodule\n" % (name, ',\n  '.join(port_spec))
+
+  elif depth == 512 and width == 32 and (ports[0] == 'write' and ports[1] == 'read'):
     s = "module %s(\n\
     %s\n\
   );\n\
@@ -88,6 +106,7 @@ endmodule\n" % (name, ',\n  '.join(port_spec), '\n  '.join(decl),
     .I2(I0)\n\
   );\n\
   endmodule\n" % (name, ',\n  '.join(port_spec))
+
 
   return s
 

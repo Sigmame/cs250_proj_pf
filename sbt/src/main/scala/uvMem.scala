@@ -14,6 +14,8 @@ class uvMem(imageWidth: Integer, imageHeight: Integer, doutWidth: Integer, memWi
   //instantiate SRAM 1024x32 (4*8bit)
   val uMem = Mem(imageWidth*imageHeight,seqRead=true){UFix(width=memWidth)}
   val vMem = Mem(imageWidth*imageHeight,seqRead=true){UFix(width=memWidth)}
+  val readOut_u = Reg(resetVal = UFix(0,doutWidth))
+  val readOut_v = Reg(resetVal = UFix(0,doutWidth))
   val count = Reg(resetVal = UFix(0,log2Up(imageWidth*imageWidth)))
   val state = Reg(resetVal = UFix(0,1))
   val WAIT = UFix(0,1)
@@ -28,10 +30,14 @@ class uvMem(imageWidth: Integer, imageHeight: Integer, doutWidth: Integer, memWi
     when (count === UFix(imageWidth * imageHeight)){
       count := UFix(0)}
   }
-  io.dout_u := uMem(count+UFix(1))
-  io.dout_v := vMem(count+UFix(1))
+  //Write
   uMem(count) := io.din_u
   vMem(count) := io.din_v
+  //Read
+  readOut_u := uMem(count+UFix(imageWidth+1))
+  readOut_v := vMem(count+UFix(imageWidth+1))
+  io.dout_u := readOut_u(doutWidth-1,0) 
+  io.dout_v := readOut_v(doutWidth-1,0)
 }
 }
 

@@ -57,20 +57,18 @@ class hsOptFlowTop(imageWidth: Integer, imageHeight: Integer, dataWidth: Integer
   iterCalc.io.Et := pDeriv.io.Et
 
   //connect to uvMem for all the uv data
-//  val uMem = new uvMem(imageWidth, imageHeight, doutWidth, memWidth)
-//  val vMem = new uvMem(imageWidth, imageHeight, doutWidth, memWidth)
-//  uMem.io.din_u := iterCalc.io.u_out.toUFix()
-//  vMem.io.din_v := iterCalc.io.v_out.toUFix()
-  iterCalc.io.u_in := UFix(0) //uMem.io.dout_u
-  iterCalc.io.v_in := UFix(0) //vMem.io.dout_v
-//  uMem.io.uv_sync_out := io.frame_sync_out
-//  vMem.io.uv_sync_out := io.frame_sync_out
+  val uMem = new uvMem(imageWidth, imageHeight, doutWidth, memWidth)
+  val vMem = new uvMem(imageWidth, imageHeight, doutWidth, memWidth)
+  iterCalc.io.u_in := uMem.io.dout_u
+  iterCalc.io.v_in := vMem.io.dout_v
+  uMem.io.uv_sync_out := io.frame_sync_out
+  vMem.io.uv_sync_out := io.frame_sync_out
 //data output  
- // io.data_out_u := UFix(0)
- // io.data_out_v := UFix(0)
   val dout_select_uv = Reg(control.io.dout_select_uv)
   io.data_out_u := Reg(Mux(dout_select_uv, iterCalc.io.u_out, UFix(0))).toUFix 
   io.data_out_v := Reg(Mux(dout_select_uv, iterCalc.io.v_out, UFix(0))).toUFix
+  uMem.io.din_u := io.data_out_u.toUFix()
+  vMem.io.din_v := io.data_out_v.toUFix()
   val f_sync = Reg(control.io.frame_sync_out)
   io.frame_sync_out := Reg(f_sync) //Reg(control.io.frame_sync_out)
 }
