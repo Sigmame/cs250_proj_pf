@@ -29,7 +29,7 @@ class control(imageWidth: Integer, imageHeight: Integer, iterationNum: Integer) 
   io.dout_select_uv := Reg(~isedge_uv)
   io.frame_sync_out := Bits(0)
   io.first_frame_out := Bits(0)
-  io.iter_count := iterCount 
+  io.iter_count := Reg(Reg(Reg(iterCount))) 
   //INITIAL STATE
   when (state === INITIAL){
     when (io.frame_sync_in === Bits(1)){

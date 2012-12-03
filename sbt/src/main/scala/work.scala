@@ -15,7 +15,7 @@ object Work {
                                  doutWidth = 26,
                                  fractWidth = 16,
                                  memWidth = 32,
-                                 iterationNum = 2,
+                                 iterationNum = 8,
                                  pipeStages = args(1).toInt))
 
         case "gaussianTest" =>
