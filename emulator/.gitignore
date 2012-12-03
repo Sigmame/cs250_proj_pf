@@ -1,6 +1,6 @@
 *~
 *.o
-hsOptflowTop-em
+hsOptFlowTop-em
 *.vcd
 *.vpd
 *.log

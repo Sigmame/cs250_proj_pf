@@ -60,31 +60,10 @@ int main (int argc, char* argv[]) {
   FILE *vcdFile = NULL;
   const char *vcdFileName = "trace.vcd";
 
-  /* parse command line options
-  int ch;
-  opterr = 0;
-  while ((ch = getopt(argc,argv,"t:v:")) != -1)
-  {
-    switch(ch)
-    {
-      // enable text trace output
-      case 't':
-        print_trace = 1;
-        break;
-      // enable vcd file generation
-      case 'v':
-        generate_vcd = 1;
-        break;
-      default:
-        return -1;
-    }
-  }
-  */
-
   // for loading of input images
   int loadImage = 1;
   int loadImageOffset = 0;
-  int loadImageCount = 0;
+  int loadImageCount = 0; //use as iteration count
 
   // for checking of output images 
   int checkOutput = 0;
@@ -95,7 +74,7 @@ int main (int argc, char* argv[]) {
   // if not specified on command line, set based on number
   // of images in simulation
   if (lim == 0)
-	lim = numImages*(imageWidth*imageHeight + WINDOW_SIZE + imageWidth*10);
+	lim = numImages*(imageWidth*imageHeight*ITERATION_NUM + WINDOW_SIZE + imageWidth*10);
  
   // generate coefficient values (built-in)
   generateFilterKernel(filterKernel, filterScale, intKernel);
@@ -171,7 +150,7 @@ int main (int argc, char* argv[]) {
 
     if (cycle != 0 && loadImage)
     {
-      if (loadImageOffset == 0)
+      if (loadImageOffset == 0 && loadImageCount == 0)
       { 
         importInputImage(img1, inputImages, imageSize); img1.close();
 	 importInputImage(img2, &inputImages[imageSize], imageSize); img2.close();
@@ -184,7 +163,7 @@ int main (int argc, char* argv[]) {
       {
         loadImageCount++;
         loadImageOffset = 0;
-        if (loadImageCount == numImages)
+        if (loadImageCount == ITERATION_NUM)
           loadImage = 0;
         else
           loadImage = 1;
@@ -194,10 +173,6 @@ int main (int argc, char* argv[]) {
     dut->hsOptFlowTop__io_data_in1   = LIT<8>(io_data_in1);
     dut->hsOptFlowTop__io_data_in2   = LIT<8>(io_data_in2);
     dut->hsOptFlowTop__io_frame_sync_in = LIT<1>(io_frame_sync_in);
-
-    // handle image dimension setup
-//    dut->hsOptFlowTop__io_image_width = LIT<10>(imageWidth-1);
-//    dut->hsOptFlowTop__io_image_height = LIT<10>(imageHeight-1);
 
     // advance simulation
     dut->clock_lo(reset);
@@ -234,7 +209,7 @@ int main (int argc, char* argv[]) {
       P_expected = P[checkOutputOffset];
       D_expected = D[checkOutputOffset];
 
-       int mask = (1 << 26) - 1;
+      int mask = (1 << 26) - 1;
       dout_mismatch = 0;
       if ((data_out_u & mask) != (u_expected & mask) || (data_out_v & mask) != (v_expected & mask))
       {
@@ -258,7 +233,7 @@ int main (int argc, char* argv[]) {
         checkOutputOffset = 0;
         checkOutput = 1;
         
-        if (checkOutputCount == numImages)
+        if (checkOutputCount == numImages)//ITERATION_NUM
           done=1;
 
       }
