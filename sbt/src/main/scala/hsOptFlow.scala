@@ -13,12 +13,12 @@ class hsOptFlow_io(windowSize: Integer, dataWidth: Integer, doutWidth: Integer) 
   val frame_sync_out = Bits(OUTPUT,1)
 }
 
-class hsOptFlowTop(imageWidth: Integer, imageHeight: Integer, dataWidth: Integer, doutWidth : Integer, fractWidth : Integer, memWidth: Integer, iterationNum: Integer) extends Component {
+class hsOptFlowTop(imageWidth: Integer, imageHeight: Integer, dataWidth: Integer, doutWidth : Integer, fractWidth : Integer, memWidth: Integer, iterationNum: Integer, pipeStages: Integer) extends Component {
   val windowSize = 25
   val io = new hsOptFlow_io(windowSize, dataWidth, doutWidth);
  
 // Control 
-  val control = new control(imageWidth, imageHeight)
+  val control = new control(imageWidth, imageHeight, iterationNum)
   control.io.frame_sync_in := io.frame_sync_in
   
 // Two 5x5 windowBuf for gaussian filter
@@ -50,25 +50,23 @@ class hsOptFlowTop(imageWidth: Integer, imageHeight: Integer, dataWidth: Integer
 
 
 // calculate uv: pdWidth, pdFrac, dpFrac, uvWidth, uvFrac
-   val iterCalc =  new uvIteration(doutWidth, fractWidth, imageWidth, memWidth) 
+   val iterCalc =  new uvIteration(doutWidth, fractWidth, imageWidth, memWidth, iterationNum) 
 //connect iteration calculation block
   iterCalc.io.Ex := pDeriv.io.Ex
   iterCalc.io.Ey := pDeriv.io.Ey
   iterCalc.io.Et := pDeriv.io.Et
-
+  iterCalc.io.iterCount := control.io.iter_count
   //connect to uvMem for all the uv data
-  val uMem = new uvMem(imageWidth, imageHeight, doutWidth, memWidth)
-  val vMem = new uvMem(imageWidth, imageHeight, doutWidth, memWidth)
-  iterCalc.io.u_in := uMem.io.dout_u
-  iterCalc.io.v_in := vMem.io.dout_v
-  uMem.io.uv_sync_out := io.frame_sync_out
-  vMem.io.uv_sync_out := io.frame_sync_out
+  val uvMemory = new uvMem(imageWidth, imageHeight, doutWidth, memWidth)
+  iterCalc.io.u_in := uvMemory.io.dout_u
+  iterCalc.io.v_in := uvMemory.io.dout_v
+  uvMemory.io.uv_sync_out := control.io.first_frame_out
 //data output  
   val dout_select_uv = Reg(control.io.dout_select_uv)
   io.data_out_u := Reg(Mux(dout_select_uv, iterCalc.io.u_out, UFix(0))).toUFix 
   io.data_out_v := Reg(Mux(dout_select_uv, iterCalc.io.v_out, UFix(0))).toUFix
-  uMem.io.din_u := io.data_out_u.toUFix()
-  vMem.io.din_v := io.data_out_v.toUFix()
+  uvMemory.io.din_u := io.data_out_u.toUFix()
+  uvMemory.io.din_v := io.data_out_v.toUFix()
   val f_sync = Reg(control.io.frame_sync_out)
   io.frame_sync_out := Reg(f_sync) //Reg(control.io.frame_sync_out)
 }

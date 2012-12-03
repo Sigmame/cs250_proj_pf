@@ -35,7 +35,7 @@ class windowBuf3x3(imageWidth: Integer, doutWidth: Integer, memWidth : Integer) 
   out_reg(3) := readOut1(doutWidth-1,0)
   out_reg(6) := readOut2(doutWidth-1,0)
       //write memory and read memory
-  val readAddr = Mux(count===UFix(imageWidth-3),UFix(0),count+UFix(1))
+  val readAddr = Mux(count===UFix(imageWidth-4),UFix(0),count+UFix(1))
   row1buf(count) := out_reg(2)
   row2buf(count) := out_reg(5)
   readOut1 := row1buf(readAddr) 

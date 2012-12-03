@@ -8,24 +8,24 @@ import scala.util.Random
 
 class uvAvg(windowSize: Integer, dataWidth: Integer) extends Component {
   val io = new Bundle {
-    val uin   = Vec(windowSize) { UFix(dir = INPUT, width = dataWidth) }
-    val vin   = Vec(windowSize) { UFix(dir = INPUT, width = dataWidth) }
-    val uAvg = UFix(OUTPUT, dataWidth)
-    val vAvg = UFix(OUTPUT, dataWidth)
+    val uin   = Vec(windowSize) { Fix(dir = INPUT, width = dataWidth) }
+    val vin   = Vec(windowSize) { Fix(dir = INPUT, width = dataWidth) }
+    val uAvg = Fix(OUTPUT, dataWidth)
+    val vAvg = Fix(OUTPUT, dataWidth)
   }
   val u6 = io.uin(1) + io.uin(3) + io.uin(5) + io.uin(7) 
   val u12 = io.uin(0) + io.uin(2) + io.uin(6) + io.uin(8)
   val u6_d = u6 * UFix(10923,16) //1/6
   val u12_d = u12 * UFix(5461,16) //1/12
   val uAvg_32 = u6_d + u12_d
-  io.uAvg := uAvg_32(31,16)
+  io.uAvg := uAvg_32(41,16)
 
   val v6 = io.vin(1) + io.vin(3) + io.vin(5) + io.vin(7) 
   val v12 = io.vin(0) + io.vin(2) + io.vin(6) + io.vin(8)
   val v6_d = v6 * UFix(10923,16) //1/6
   val v12_d = v12 * UFix(5461,16) //1/12
   val vAvg_32 = v6_d + v12_d
-  io.vAvg := vAvg_32(31,16) 
+  io.vAvg := vAvg_32(41,16) 
  }
 
 class uvAvgTest(c: uvAvg) extends Tester(c, Array(c.io)) { //binds the tester to convolution and test its io

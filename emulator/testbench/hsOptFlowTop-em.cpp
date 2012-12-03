@@ -43,6 +43,8 @@ int main (int argc, char* argv[]) {
   int64_t img1_expected = 0;
   int64_t u_expected = 0;
   int64_t v_expected = 0;
+  int64_t uAvg_expected = 0;
+  int64_t vAvg_expected = 0;
   int64_t Ex_expected = 0;
   int64_t Ey_expected = 0;
   int64_t Et_expected = 0;
@@ -132,10 +134,12 @@ int main (int argc, char* argv[]) {
       fprintf(vcdFile, "$var reg 26 IMG1_EXP img1_expected $end\n");
       fprintf(vcdFile, "$var reg 32 U_EXP u_expected $end\n");
       fprintf(vcdFile, "$var reg 32 V_EXP v_expected $end\n");
+      fprintf(vcdFile, "$var reg 26 UAVG_EXP uAvg_expected $end\n");
+      fprintf(vcdFile, "$var reg 26 VAVG_EXP vAvg_expected $end\n");
       fprintf(vcdFile, "$var reg 26 EX_EXP Ex_expected $end\n");
       fprintf(vcdFile, "$var reg 26 EY_EXP Ey_expected $end\n");
       fprintf(vcdFile, "$var reg 26 ET_EXP Et_expected $end\n");
-      fprintf(vcdFile, "$var reg 32 P_EXP P_expected $end\n");
+      fprintf(vcdFile, "$var reg 36 P_EXP P_expected $end\n");
       fprintf(vcdFile, "$var reg 32 D_EXP D_expected $end\n");
       fprintf(vcdFile, "$var reg 32 MISMATCH dout_mismatch $end\n");
       fprintf(vcdFile, "$upscope $end\n");
@@ -203,6 +207,8 @@ int main (int argc, char* argv[]) {
       img1_expected = outputImages[checkOutputOffset];
       u_expected = u[checkOutputOffset]; // expected
       v_expected = v[checkOutputOffset]; 
+      uAvg_expected = uAvg[checkOutputOffset]; 
+      vAvg_expected = vAvg[checkOutputOffset]; 
       Ex_expected = Ex[checkOutputOffset];
       Ey_expected = Ey[checkOutputOffset];
       Et_expected = Et[checkOutputOffset];
@@ -267,10 +273,12 @@ int main (int argc, char* argv[]) {
       dat_dump(vcdFile, dat_t<26>(img1_expected), "IMG1_EXP");
       dat_dump(vcdFile, dat_t<32>(u_expected), "U_EXP");
       dat_dump(vcdFile, dat_t<32>(v_expected), "V_EXP");
+      dat_dump(vcdFile, dat_t<26>(uAvg_expected), "UAVG_EXP");
+      dat_dump(vcdFile, dat_t<26>(vAvg_expected), "VAVG_EXP");
       dat_dump(vcdFile, dat_t<26>(Ex_expected), "EX_EXP");
       dat_dump(vcdFile, dat_t<26>(Ey_expected), "EY_EXP");
       dat_dump(vcdFile, dat_t<26>(Et_expected), "ET_EXP");
-      dat_dump(vcdFile, dat_t<32>(P_expected), "P_EXP");
+      dat_dump(vcdFile, dat_t<36>(P_expected), "P_EXP");
       dat_dump(vcdFile, dat_t<32>(D_expected), "D_EXP");
 
       // mismatch signal (high when output doesn't match expected output)

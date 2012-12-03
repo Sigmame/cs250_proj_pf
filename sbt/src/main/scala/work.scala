@@ -15,7 +15,8 @@ object Work {
                                  doutWidth = 26,
                                  fractWidth = 16,
                                  memWidth = 32,
-                                 iterationNum = 8))
+                                 iterationNum = 2,
+                                 pipeStages = args(1).toInt))
 
         case "gaussianTest" =>
             chiselMainTest( mainArgs, () => 
