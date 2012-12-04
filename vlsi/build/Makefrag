@@ -84,6 +84,11 @@ target_library_files = \
   saed32lvt_$(tt_corner_stdcells).db \
 
 # SRAM libraries
-mw_sram_libs = ../$(refdir)/SRAM1R1W1024x32.mw
-db_sram_libs = SRAM1R1W1024x32.db
+mw_sram_libs = \
+  ../$(refdir)/SRAM1R1W512x32.mw \
+  ../$(refdir)/SRAM1R1W131072x32.mw \
+
+db_sram_libs = \
+  SRAM1R1W512x32.db \
+  SRAM1R1W131072x32.db \
 

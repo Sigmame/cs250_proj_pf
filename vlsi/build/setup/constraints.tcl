@@ -9,31 +9,30 @@ set_load -pin_load 0.004 [all_outputs]
 
 # Set timing contraints for the input and output I/O ports
 set all_inputs_but_clk [remove_from_collection [all_inputs] [get_ports clk]]
-# disregard timing of image_width, image_height, reset inputs
-# (assuming they will be stable for a long time)
-set dim_inputs [get_ports io_image_*]
-set_false_path -from $dim_inputs
+# disregard timing of reset inputs
 set_false_path -from [get_ports reset]
 
-set all_inputs_but_dim [remove_from_collection $all_inputs_but_clk $dim_inputs]
-set_input_delay ${INPUT_DELAY} -clock [get_clocks clk] $all_inputs_but_dim
+set_input_delay ${INPUT_DELAY} -clock [get_clocks clk] $all_inputs_but_clk
 set_output_delay ${OUTPUT_DELAY} -clock [get_clocks clk] [all_outputs]
 
 # preserve (parts of) hierarchy
-set_ungroup windowBuf5x5 false
-set_ungroup windowBuf5x5/* true
-set_ungroup windowBuf2x2x2 false
-set_ungroup windowBuf2x2x2/* true
-set_ungroup windowBuf3x3 false
-set_ungroup windowBuf3x3/* true
+set_ungroup winBuf5x5_1 false
+set_ungroup winBuf5x5_1/* true
+set_ungroup winBuf5x5_2 false
+set_ungroup winBuf5x5_2/* true
+set_ungroup winBuf2x2x2 false
+set_ungroup winBuf2x2x2/* true
 
-set_ungroup gaussian false
-set_ungroup gaussian/* true
-set_ungroup partialDeriv false
-set_ungroup partialDeriv/* true
+set_ungroup gaussianF1 false
+set_ungroup gaussianF1/* true
+set_ungroup gaussianF2 false
+set_ungroup gaussianF2/* true
 
-set_ungroup uvIteration false
-set_ungroup uvIteration/uvAvg true
+set_ungroup iterCalc false
+set_ungroup iterCalc/* true
+
+set_ungroup uvMemory false
+set_ungroup uvMemory/* true
 
 # label libraries by threshold voltage
 set dbfile [lindex $TARGET_LIBRARY_FILES 0] 
