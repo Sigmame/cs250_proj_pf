@@ -1,0 +1,11 @@
+Information: Checking out the license 'DesignWare'. (SEC-104)
+Analyzing datapath extraction ...
+
+.
+Information: Operator associated with resources 'mult_1609' in design 'uvCalc' breaks the datapath block because there is leakage on its fanin.  (HDL-120)
+Information: Operator associated with resources 'mult_1617' in design 'uvCalc' breaks the datapath block because there is leakage on its fanin.  (HDL-120)
+Information: Operator associated with resources 'iterCalc/uvAverage/add_1699 iterCalc/uvAverage/add_1698 iterCalc/uvAverage/add_1697' in design 'hsOptFlowTop' breaks the datapath block because there is leakage due to truncation on its fanout.  (HDL-120)
+Information: Operator associated with resources 'iterCalc/uvAverage/add_1695 iterCalc/uvAverage/add_1694 iterCalc/uvAverage/add_1693' in design 'hsOptFlowTop' breaks the datapath block because there is leakage due to truncation on its fanout.  (HDL-120)
+Information: Operator associated with resources 'iterCalc/uvAverage/add_1710 iterCalc/uvAverage/add_1709 iterCalc/uvAverage/add_1708' in design 'hsOptFlowTop' breaks the datapath block because there is leakage due to truncation on its fanout.  (HDL-120)
+Information: Operator associated with resources 'iterCalc/uvAverage/add_1706 iterCalc/uvAverage/add_1705 iterCalc/uvAverage/add_1704' in design 'hsOptFlowTop' breaks the datapath block because there is leakage due to truncation on its fanout.  (HDL-120)
+1

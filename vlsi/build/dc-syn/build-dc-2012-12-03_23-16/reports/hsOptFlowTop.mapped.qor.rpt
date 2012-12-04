@@ -1,0 +1,100 @@
+Information: Updating design information... (UID-85)
+Warning: Design 'hsOptFlowTop' contains 1 high-fanout nets. A fanout number of 1000 will be used for delay calculations involving these nets. (TIM-134)
+ 
+****************************************
+Report : qor
+Design : hsOptFlowTop
+Version: G-2012.06-SP3
+Date   : Mon Dec  3 23:35:16 2012
+****************************************
+
+
+  Timing Path Group 'REGIN'
+  -----------------------------------
+  Levels of Logic:               7.00
+  Critical Path Length:          0.68
+  Critical Path Slack:          63.13
+  Critical Path Clk Period:     64.00
+  Total Negative Slack:          0.00
+  No. of Violating Paths:        0.00
+  Worst Hold Violation:          0.00
+  Total Hold Violation:          0.00
+  No. of Hold Violations:        0.00
+  -----------------------------------
+
+  Timing Path Group 'REGOUT'
+  -----------------------------------
+  Levels of Logic:              12.00
+  Critical Path Length:          1.26
+  Critical Path Slack:          62.60
+  Critical Path Clk Period:     64.00
+  Total Negative Slack:          0.00
+  No. of Violating Paths:        0.00
+  Worst Hold Violation:          0.00
+  Total Hold Violation:          0.00
+  No. of Hold Violations:        0.00
+  -----------------------------------
+
+  Timing Path Group 'clk'
+  -----------------------------------
+  Levels of Logic:             679.00
+  Critical Path Length:         63.89
+  Critical Path Slack:           0.00
+  Critical Path Clk Period:     64.00
+  Total Negative Slack:          0.00
+  No. of Violating Paths:        0.00
+  Worst Hold Violation:          0.00
+  Total Hold Violation:          0.00
+  No. of Hold Violations:        0.00
+  -----------------------------------
+
+
+  Cell Count
+  -----------------------------------
+  Hierarchical Cell Count:         16
+  Hierarchical Port Count:       2256
+  Leaf Cell Count:              51777
+  Buf/Inv Cell Count:           13690
+  CT Buf/Inv Cell Count:            0
+  Combinational Cell Count:     50532
+  Sequential Cell Count:         1245
+  Macro Count:                      0
+  -----------------------------------
+
+
+  Area
+  -----------------------------------
+  Combinational Area:   130332.920973
+  Noncombinational Area:
+                       4059572.840801
+  Buf/Inv Area:          22845.004798
+  Net Area:                  0.000000
+  Net XLength        :      811266.56
+  Net YLength        :      531944.31
+  -----------------------------------
+  Cell Area:           4189905.761774
+  Design Area:         4189905.761774
+  Net Length        :      1343210.88
+
+
+  Design Rules
+  -----------------------------------
+  Total Number of Nets:         55786
+  Nets With Violations:           622
+  Max Trans Violations:           182
+  Max Cap Violations:             502
+  -----------------------------------
+
+
+  Hostname: icluster16.EECS.Berkeley.EDU
+
+  Compile CPU Statistics
+  -----------------------------------------
+  Resource Sharing:                   17.91
+  Logic Optimization:                473.09
+  Mapping Optimization:              479.15
+  -----------------------------------------
+  Overall Compile Time:             1097.27
+  Overall Compile Wall Clock Time:  1111.12
+
+1

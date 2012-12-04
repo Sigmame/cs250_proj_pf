@@ -1,0 +1,25 @@
+ 
+****************************************
+Report : clock_gating
+        -nosplit
+Design : hsOptFlowTop
+Version: G-2012.06-SP3
+Date   : Mon Dec  3 23:35:27 2012
+****************************************
+
+
+
+                             Clock Gating Summary
+          ------------------------------------------------------------
+          |    Number of Clock gating elements    |        3         |
+          |                                       |                  |
+          |    Number of Gated registers          |    46 (3.73%)    |
+          |                                       |                  |
+          |    Number of Ungated registers        |  1186 (96.27%)   |
+          |                                       |                  |
+          |    Total number of registers          |     1232         |
+          ------------------------------------------------------------
+
+
+
+1
