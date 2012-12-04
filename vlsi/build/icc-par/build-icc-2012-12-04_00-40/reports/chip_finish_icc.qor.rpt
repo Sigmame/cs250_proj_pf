@@ -1,0 +1,98 @@
+ 
+****************************************
+Report : qor
+Design : hsOptFlowTop
+Version: G-2012.06-ICC-SP3
+Date   : Tue Dec  4 01:31:28 2012
+****************************************
+
+
+  Timing Path Group 'REGIN'
+  -----------------------------------
+  Levels of Logic:              30.00
+  Critical Path Length:          3.09
+  Critical Path Slack:          61.17
+  Critical Path Clk Period:     64.00
+  Total Negative Slack:          0.00
+  No. of Violating Paths:        0.00
+  Worst Hold Violation:          0.00
+  Total Hold Violation:          0.00
+  No. of Hold Violations:        0.00
+  -----------------------------------
+
+  Timing Path Group 'REGOUT'
+  -----------------------------------
+  Levels of Logic:               9.00
+  Critical Path Length:          1.19
+  Critical Path Slack:          62.22
+  Critical Path Clk Period:     64.00
+  Total Negative Slack:          0.00
+  No. of Violating Paths:        0.00
+  Worst Hold Violation:          0.00
+  Total Hold Violation:          0.00
+  No. of Hold Violations:        0.00
+  -----------------------------------
+
+  Timing Path Group 'clk'
+  -----------------------------------
+  Levels of Logic:             829.00
+  Critical Path Length:         63.86
+  Critical Path Slack:           0.05
+  Critical Path Clk Period:     64.00
+  Total Negative Slack:          0.00
+  No. of Violating Paths:        0.00
+  Worst Hold Violation:          0.00
+  Total Hold Violation:          0.00
+  No. of Hold Violations:        0.00
+  -----------------------------------
+
+
+  Cell Count
+  -----------------------------------
+  Hierarchical Cell Count:         16
+  Hierarchical Port Count:       2498
+  Leaf Cell Count:              61916
+  Buf/Inv Cell Count:           20874
+  CT Buf/Inv Cell Count:           80
+  Combinational Cell Count:     60671
+  Sequential Cell Count:         1245
+  Macro Count:                     10
+  -----------------------------------
+
+
+  Area
+  -----------------------------------
+  Combinational Area:   154452.966282
+  Noncombinational Area:
+                       4059703.979081
+  Buf/Inv Area:          40046.233516
+  Net Area:              77830.309166
+  Net XLength        :     1283116.50
+  Net YLength        :     1017485.38
+  -----------------------------------
+  Cell Area:           4214156.945363
+  Design Area:         4291987.254529
+  Net Length        :      2300602.00
+
+
+  Design Rules
+  -----------------------------------
+  Total Number of Nets:         65698
+  Nets With Violations:           100
+  Max Trans Violations:            43
+  Max Cap Violations:              88
+  -----------------------------------
+
+
+  Hostname: icluster16.EECS.Berkeley.EDU
+
+  Compile CPU Statistics
+  -----------------------------------------
+  Resource Sharing:                   17.91
+  Logic Optimization:                473.09
+  Mapping Optimization:             2953.20
+  -----------------------------------------
+  Overall Compile Time:             3576.40
+  Overall Compile Wall Clock Time:  2613.12
+
+1

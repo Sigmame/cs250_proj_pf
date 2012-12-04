@@ -34,7 +34,7 @@ verilog_cells_dir = $(UCB_VLSI_HOME)/stdcells/$(UCB_STDCELLS)/verilog
 
 VCS      = vcs -full64
 VCS_OPTS = -notice -PP +lint=all,noVCDE,noTFIPC,noIWU,noOUDPE \
-           +v2k +vc+list -timescale=1ns/1ps \
+           +v2k +vc+list -timescale=100ns/100ps \
            -P ../dc-syn/current-dc/access.tab -debug \
 
 #--------------------------------------------------------------------

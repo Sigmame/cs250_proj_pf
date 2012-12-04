@@ -28,7 +28,7 @@ vsrcs = \
 
 toplevel = ${MODEL}
 testharness = ${MODEL}TestHarness_rtl
-toplevelinst = hsOptFlowTop
+toplevelinst = hsOptFlow_dut
 
 #--------------------------------------------------------------------
 # Build rules
