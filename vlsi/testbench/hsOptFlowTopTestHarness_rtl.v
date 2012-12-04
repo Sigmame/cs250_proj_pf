@@ -8,7 +8,6 @@ extern void get_output_pixel (input reg [31:0] offset, output reg [31:0] dout_u,
 `define IMAGE_HEIGHT 256
 `define IMAGE_SIZE `IMAGE_WIDTH * `IMAGE_HEIGHT
 `define FP_WIDTH 26
-`define ITERATION_NUM 8
 
 module hsOptFlowTopTestHarness_rtl;
 
@@ -42,6 +41,9 @@ module hsOptFlowTopTestHarness_rtl;
     .clk              (clk),
     .reset            (reset_in),
 
+//    .io_image_width   (10'd`IMAGE_WIDTH-1'b1),
+//    .io_image_height  (10'd`IMAGE_HEIGHT-1'b1),
+
     .io_frame_sync_in     (frame_sync_in),
     .io_data_in1          (data_in1),
     .io_data_in2          (data_in2),
@@ -58,6 +60,7 @@ module hsOptFlowTopTestHarness_rtl;
 
   initial
   begin
+
     // Get number of test images to try before finishing
     if (!$value$plusargs("num-images=%d", num_images))
       num_images = 1;
@@ -66,7 +69,7 @@ module hsOptFlowTopTestHarness_rtl;
     // defaults to number neccessary to compute specified number of test
     // images
     if (!$value$plusargs("max-cycles=%d", max_cycles))
-      max_cycles = (num_images * `IMAGE_SIZE * `ITERATION_NUM) + (`IMAGE_WIDTH*10);
+      max_cycles = (num_images * `IMAGE_SIZE * 8) + (`IMAGE_WIDTH*10);
 
     // turn on VPD trace file generation
     if ($value$plusargs("vcdpluson=%d", vcdpluson))
@@ -87,7 +90,6 @@ module hsOptFlowTopTestHarness_rtl;
 
   // cycle counter, completion and timeout checks
   reg [31:0] cycle_count = 32'd0;
-  reg load = 1'b1;
   reg done = 1'b0;
   reg failed = 1'b0;
   always @(posedge clk)
@@ -126,13 +128,13 @@ module hsOptFlowTopTestHarness_rtl;
   reg [31:0] correct_dout_u = 32'd0;
   reg [31:0] correct_dout_v = 32'd0;
   reg [31:0] image_count = 32'd0;
-  reg [31:0] input_iter_count = 32'd0;
+  reg [31:0] iter_count = 32'd0;
 
   always @(posedge clk)
   begin
-    if (cycle_count >= 4 && load)
+    if (cycle_count >= 4)
     begin
-      if (input_offset == 0 && input_iter_count == 0)
+      if (input_offset == 0 && iter_count == 0)
       begin
         // generate a new random test input image
         generate_input_image();
@@ -148,12 +150,8 @@ module hsOptFlowTopTestHarness_rtl;
 
       if (input_offset == `IMAGE_SIZE-1)
       begin
-        input_iter_count <= input_iter_count + 1;
         input_offset <= 0;
-        if (input_iter_count == `ITERATION_NUM-1)
-          load <= 1'b0;
-        else
-          load <= 1'b1;
+        iter_count <= iter_count + 1;
       end
       else
         input_offset <= input_offset + 1;
@@ -165,16 +163,15 @@ module hsOptFlowTopTestHarness_rtl;
         started <= 1'b1;
       end
 
-      if (started)
+      if (started || frame_sync_out)
       begin
         // get value of expected output image at specified offset
         get_output_pixel(output_offset, correct_dout_u, correct_dout_v);
-        if (data_out_u == correct_dout_u[`FP_WIDTH-1:0] && data_out_v == correct_dout_v[`FP_WIDTH-1:0])
+        if (data_out_u == correct_dout_u[`FP_WIDTH-1:0])
           mismatch <= 1'b0;
         else
         begin
-          $display("ERROR: Mismatch at cycle %d : expected u %02x : actual u %02x", cycle_count, correct_dout_u[`FP_WIDTH-1:0], data_out_u);
-          $display("                              expected v %02x : actual v %02x", cycle_count, correct_dout_v[`FP_WIDTH-1:0], data_out_v);
+          $display("ERROR: Mismatch at cycle %d : expected %02x : actual %02x", cycle_count, correct_dout_u[`FP_WIDTH-1:0], data_out_u);
           failed <= 1'b1;
           image_failed <= 1'b1;
           mismatch <= 1'b1;

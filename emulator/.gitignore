@@ -6,3 +6,4 @@ hsOptFlowTop-em
 *.log
 DVEfiles
 generated-src
+*.txt
