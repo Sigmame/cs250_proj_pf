@@ -67,6 +67,7 @@ if { ${PIPE_STAGES} == 1} {
 #  set_dont_retime convolver/coeff_reg*
 #  set_dont_retime convolver/dout_reg*
 #  compile_ultra -gate_clock -timing_high_effort_script
+  compile_ultra -gate_clock -no_autoungroup
 } else {
 # recommended in DC-RRT manual for pipelined designs
   set hdlin_ff_always_sync_set_reset true
