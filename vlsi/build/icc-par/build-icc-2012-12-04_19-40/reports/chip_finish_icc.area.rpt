@@ -1,0 +1,62 @@
+ 
+****************************************
+Report : area
+Design : hsOptFlowTop
+Version: G-2012.06-ICC-SP3
+Date   : Tue Dec  4 20:17:11 2012
+****************************************
+
+Library(s) Used:
+
+    saed32hvt_tt1p05v25c (File: /home/ff/cs250/stdcells/synopsys-32nm/multi_vt/db/saed32hvt_tt1p05v25c.db)
+    saed32lvt_tt1p05v25c (File: /home/ff/cs250/stdcells/synopsys-32nm/multi_vt/db/saed32lvt_tt1p05v25c.db)
+    saed32rvt_tt1p05v25c (File: /home/ff/cs250/stdcells/synopsys-32nm/multi_vt/db/saed32rvt_tt1p05v25c.db)
+    SRAM1R1W512x32 (File: /scratch/hsOptFlow/vlsi/ref/SRAM1R1W512x32.db)
+    SRAM1R1W131072x32 (File: /scratch/hsOptFlow/vlsi/ref/SRAM1R1W131072x32.db)
+
+Number of ports:                           74
+Number of nets:                          1707
+Number of cells:                          814
+Number of combinational cells:            750
+Number of sequential cells:                55
+Number of macros:                          10
+Number of buf/inv:                        648
+Number of references:                      40
+
+Combinational area:       137895.738284
+Buf/Inv area:             28574.173019
+Noncombinational area:    4059670.432079
+Net Interconnect area:    72750.837652 
+
+Total cell area:          4197566.170363
+Total area:               4270317.008015
+
+Hierarchical area distribution
+------------------------------
+
+                                  Global cell area                 Local cell area
+                                  ---------------------  ------------------------------------ 
+Hierarchical cell                 Absolute      Percent  Combi-       Noncombi-  Black
+                                  Total         Total    national     national   boxes         Design
+--------------------------------  ------------  -------  -----------  ---------  ------------  ------------------------------------------------
+hsOptFlowTop                      4197566.1704    100.0    1783.8368   381.2160        0.0000  hsOptFlowTop
+control                               596.4760      0.0     320.4756   264.3098        0.0000  control
+control/clk_gate_count_x_reg            5.8453      0.0       0.0000     5.8453        0.0000  SNPS_CLOCK_GATE_HIGH_control_1
+control/clk_gate_iterCount_reg          5.8453      0.0       0.0000     5.8453        0.0000  SNPS_CLOCK_GATE_HIGH_control_0
+gaussianF1                           2533.8156      0.1    2533.8156     0.0000        0.0000  gaussian_0
+gaussianF2                           2481.9702      0.1    2481.9702     0.0000        0.0000  gaussian_1
+iterCalc                           163579.6687      3.9  121932.9535  3255.0764        0.0000  uvIteration
+iterCalc/winBuf3_u_row1buf           9628.1528      0.2     223.9009     0.0000     9404.2520  hsOptFlowTop_uvIteration_windowBuf3x3__row1buf_0
+iterCalc/winBuf3_u_row2buf           9608.0754      0.2     203.8235     0.0000     9404.2520  hsOptFlowTop_uvIteration_windowBuf3x3__row2buf_0
+iterCalc/winBuf3_v_row1buf           9625.6114      0.2     221.3594     0.0000     9404.2520  hsOptFlowTop_uvIteration_windowBuf3x3__row1buf_1
+iterCalc/winBuf3_v_row2buf           9529.7991      0.2     125.5471     0.0000     9404.2520  hsOptFlowTop_uvIteration_windowBuf3x3__row2buf_1
+pDeriv                               1751.3063      0.0    1751.3063     0.0000        0.0000  partialDeriv
+uvMemory                          3979792.9513     94.8    3488.6348   136.2212  3976162.2500  uvMem
+uvMemory/clk_gate_count_reg             5.8453      0.0       0.0000     5.8453        0.0000  SNPS_CLOCK_GATE_HIGH_uvMem
+winBuf2x2x2                         21405.6015      0.5    1182.0238  1415.0738    18808.5039  windowBuf2x2x2
+winBuf5x5_1                         11576.9291      0.3     774.8851  1397.7920     9404.2520  windowBuf5x5
+winBuf5x5_2                         11682.3988      0.3     871.2057  1406.9412     9404.2520  windowBuf5x5_1
+--------------------------------  ------------  -------  -----------  ---------  ------------  ------------------------------------------------
+Total                                                    137895.7383  8274.1665  4051396.2656
+
+1

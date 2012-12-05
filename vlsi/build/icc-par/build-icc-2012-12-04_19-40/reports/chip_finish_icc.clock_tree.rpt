@@ -96,7 +96,7 @@ Information: Input delay ('fall') on clock port 'clk' will be added to the clock
 Report : clock tree
 Design : hsOptFlowTop
 Version: G-2012.06-ICC-SP3
-Date   : Tue Dec  4 01:31:15 2012
+Date   : Tue Dec  4 20:16:56 2012
 ****************************************
 
 Information: Float pin scale factor for the 'max' operating condition of scenario 'default' is set to 1.000 (CTS-375)
@@ -104,5 +104,5 @@ Information: Float pin scale factor for the 'max' operating condition of scenari
 ============= Clock Tree Summary ==============
 Clock                Sinks     CTBuffers ClkCells  Skew      LongestPath TotalDRC   BufferArea
 -----------------------------------------------------------------------------------------------
-clk                  1252      80        83        0.0387    0.4545      9            392.3982
+clk                  1252      62        65        0.0213    0.3285      10           346.9064
 1

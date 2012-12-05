@@ -8,7 +8,7 @@ set_preferred_routing_direction   -layers {M1 M3 M5 M7} -direction horizontal
 set_preferred_routing_direction   -layers {M2 M4 M6 } -direction vertical
 
 # set I/O pins
-set_pin_physical_constraints -layers {M5} -side 1 -offset 50 -pin_spacing 5 [get_ports]
+set_pin_physical_constraints -layers {M5} -side 4 -offset 50 -pin_spacing 25 [get_ports]
 set_fp_pin_constraints \
   -block_level \
   -use_physical_constraints on \
@@ -16,7 +16,9 @@ set_fp_pin_constraints \
   -keep_buses_together on
 
 create_floorplan \
-        -core_utilization 0.7 \
+         -control_type width_and_height \
+         -core_width 2600 \
+         -core_height 1850 \
         -flip_first_row \
         -start_first_row \
   	-left_io2core 5 \

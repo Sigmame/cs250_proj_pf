@@ -9,15 +9,15 @@ Report : power
         -analysis_effort low
 Design : hsOptFlowTop
 Version: G-2012.06-ICC-SP3
-Date   : Tue Dec  4 01:31:38 2012
+Date   : Tue Dec  4 20:17:18 2012
 ****************************************
 
 
 Library(s) Used:
 
     saed32hvt_tt1p05v25c (File: /home/ff/cs250/stdcells/synopsys-32nm/multi_vt/db/saed32hvt_tt1p05v25c.db)
-    saed32rvt_tt1p05v25c (File: /home/ff/cs250/stdcells/synopsys-32nm/multi_vt/db/saed32rvt_tt1p05v25c.db)
     saed32lvt_tt1p05v25c (File: /home/ff/cs250/stdcells/synopsys-32nm/multi_vt/db/saed32lvt_tt1p05v25c.db)
+    saed32rvt_tt1p05v25c (File: /home/ff/cs250/stdcells/synopsys-32nm/multi_vt/db/saed32rvt_tt1p05v25c.db)
     SRAM1R1W512x32 (File: /scratch/hsOptFlow/vlsi/ref/SRAM1R1W512x32.db)
     SRAM1R1W131072x32 (File: /scratch/hsOptFlow/vlsi/ref/SRAM1R1W131072x32.db)
 
@@ -43,18 +43,18 @@ Power-specific unit information :
                                        Switch   Int      Leak     Total
 Hierarchy                              Power    Power    Power    Power    %
 --------------------------------------------------------------------------------
-hsOptFlowTop                            494.657 4.45e+03 4.37e+09 9.32e+03 100.0
-  control (control)                       1.849    4.561 5.45e+06   11.858   0.1
-  winBuf5x5_1 (windowBuf5x5)              4.888   89.038 9.25e+07  186.441   2.0
-  winBuf5x5_2 (windowBuf5x5_1)            8.704   92.145 5.71e+07  157.964   1.7
-  gaussianF1 (gaussian_0)                 6.553   11.691 1.00e+07   28.240   0.3
-  gaussianF2 (gaussian_1)                 6.419   11.678 1.02e+07   28.304   0.3
-  winBuf2x2x2 (windowBuf2x2x2)            4.745  154.912 1.26e+08  286.121   3.1
-  pDeriv (partialDeriv)                   6.131    7.719 1.95e+08  208.615   2.2
-  iterCalc (uvIteration)                410.167  721.433 2.58e+09 3.71e+03  39.9
-    winBuf3_u_row1buf (hsOptFlowTop_uvIteration_windowBuf3x3__row1buf_0)    0.127   65.643 1.01e+06   66.778   0.7
-    winBuf3_u_row2buf (hsOptFlowTop_uvIteration_windowBuf3x3__row2buf_0)    0.446   65.791 4.12e+06   70.358   0.8
-    winBuf3_v_row1buf (hsOptFlowTop_uvIteration_windowBuf3x3__row1buf_1)    0.222   65.700 4.99e+06   70.908   0.8
-    winBuf3_v_row2buf (hsOptFlowTop_uvIteration_windowBuf3x3__row2buf_1)    0.400   65.893 3.23e+06   69.525   0.7
-  uvMemory (uvMem)                        2.051 3.32e+03 9.47e+08 4.27e+03  45.8
+hsOptFlowTop                            327.633 4.39e+03 2.58e+09 7.30e+03 100.0
+  control (control)                       0.840    4.457 5.39e+06   10.688   0.1
+  winBuf5x5_1 (windowBuf5x5)              1.886   88.221 4.02e+07  130.277   1.8
+  winBuf5x5_2 (windowBuf5x5_1)            4.282   88.727 3.80e+07  131.027   1.8
+  gaussianF1 (gaussian_0)                 5.514   11.227 9.58e+06   26.323   0.4
+  gaussianF2 (gaussian_1)                 5.196   10.943 9.40e+06   25.534   0.3
+  winBuf2x2x2 (windowBuf2x2x2)            3.852  156.750 7.08e+07  231.411   3.2
+  pDeriv (partialDeriv)                   3.573    6.086 2.52e+07   34.819   0.5
+  iterCalc (uvIteration)                251.451  659.197 1.16e+09 2.07e+03  28.3
+    winBuf3_u_row1buf (hsOptFlowTop_uvIteration_windowBuf3x3__row1buf_0)    0.551   65.703 4.74e+06   70.997   1.0
+    winBuf3_u_row2buf (hsOptFlowTop_uvIteration_windowBuf3x3__row2buf_0)    0.824   65.919 2.93e+06   69.673   1.0
+    winBuf3_v_row1buf (hsOptFlowTop_uvIteration_windowBuf3x3__row1buf_1)    0.459   65.744 2.79e+06   68.990   0.9
+    winBuf3_v_row2buf (hsOptFlowTop_uvIteration_windowBuf3x3__row2buf_1)    0.392   65.788 2.56e+06   68.742   0.9
+  uvMemory (uvMem)                        6.874 3.33e+03 8.46e+08 4.18e+03  57.3
 1

@@ -1,0 +1,20 @@
+ 
+****************************************
+Report : clock timing
+        -type skew
+        -nworst 1
+        -setup
+Design : hsOptFlowTop
+Version: G-2012.06-ICC-SP3
+Date   : Tue Dec  4 20:17:09 2012
+****************************************
+
+  Clock: clk
+  Clock Pin                              Latency    CRP      Skew
+----------------------------------------------------------------------------
+  iterCalc/winBuf3_u_out_reg_3_reg_3_/CLK
+                                         0.33                          wrp-+
+  R30_reg_13_/CLK                        0.30      -0.00     0.03      wrp-+
+----------------------------------------------------------------------------
+
+1
