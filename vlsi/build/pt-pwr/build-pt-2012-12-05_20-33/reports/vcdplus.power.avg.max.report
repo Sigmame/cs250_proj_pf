@@ -1,0 +1,72 @@
+****************************************
+Report : Averaged Power
+	-hierarchy
+	-verbose
+	-nosplit
+Design : hsOptFlowTop
+Version: G-2012.06
+Date   : Wed Dec  5 20:34:31 2012
+****************************************
+
+Library(s) Used:
+
+    saed32hvt_tt1p05v25c (File: /home/ff/cs250/stdcells/synopsys-32nm/multi_vt/db/saed32hvt_tt1p05v25c.db)
+    saed32rvt_tt1p05v25c (File: /home/ff/cs250/stdcells/synopsys-32nm/multi_vt/db/saed32rvt_tt1p05v25c.db)
+    saed32lvt_tt1p05v25c (File: /home/ff/cs250/stdcells/synopsys-32nm/multi_vt/db/saed32lvt_tt1p05v25c.db)
+    SRAM1R1W512x32 (File: /scratch/hsOptFlow/vlsi/ref/SRAM1R1W512x32.db)
+    SRAM1R1W131072x32 (File: /scratch/hsOptFlow/vlsi/ref/SRAM1R1W131072x32.db)
+
+
+Operating Conditions: tt1p05v25c   Library: saed32hvt_tt1p05v25c
+Wire Load Model Mode: enclosed
+
+Cell               Design       Wire_model  Library       Selection_type
+--------------------------------------------------------------------------------
+                   hsOptFlowTop 8000000     saed32hvt_tt1p05v25c automatic-by-area
+control            control      8000        saed32hvt_tt1p05v25c automatic-by-area
+control/clk_gate_count_x_reg SNPS_CLOCK_GATE_HIGH_control_1 ForQA saed32hvt_tt1p05v25c automatic-by-area
+control/clk_gate_iterCount_reg SNPS_CLOCK_GATE_HIGH_control_0 ForQA saed32hvt_tt1p05v25c automatic-by-area
+uvMemory           uvMem        4000000     saed32hvt_tt1p05v25c automatic-by-area
+uvMemory/clk_gate_count_reg SNPS_CLOCK_GATE_HIGH_uvMem ForQA saed32hvt_tt1p05v25c automatic-by-area
+winBuf2x2x2        windowBuf2x2x2 35000     saed32hvt_tt1p05v25c automatic-by-area
+iterCalc           uvIteration  280000      saed32hvt_tt1p05v25c automatic-by-area
+iterCalc/winBuf3_v_row2buf hsOptFlowTop_uvIteration_windowBuf3x3__row2buf_1 16000 saed32hvt_tt1p05v25c automatic-by-area
+iterCalc/winBuf3_u_row2buf hsOptFlowTop_uvIteration_windowBuf3x3__row2buf_0 16000 saed32hvt_tt1p05v25c automatic-by-area
+iterCalc/winBuf3_v_row1buf hsOptFlowTop_uvIteration_windowBuf3x3__row1buf_1 16000 saed32hvt_tt1p05v25c automatic-by-area
+iterCalc/winBuf3_u_row1buf hsOptFlowTop_uvIteration_windowBuf3x3__row1buf_0 16000 saed32hvt_tt1p05v25c automatic-by-area
+winBuf5x5_1        windowBuf5x5 16000       saed32hvt_tt1p05v25c automatic-by-area
+winBuf5x5_2        windowBuf5x5_1 16000     saed32hvt_tt1p05v25c automatic-by-area
+pDeriv             partialDeriv 8000        saed32hvt_tt1p05v25c automatic-by-area
+gaussianF1         gaussian_0   8000        saed32hvt_tt1p05v25c automatic-by-area
+gaussianF2         gaussian_1   8000        saed32hvt_tt1p05v25c automatic-by-area
+
+Power-specific unit information :
+    Voltage Units = 1 V
+    Capacitance Units = 1 pf
+    Time Units = 1 ns
+    Dynamic Power Units = 1 W
+    Leakage Power Units = 1 W
+
+
+
+                                      Switch   Int      Leak      Total
+Hierarchy                             Power    Power    Power     Power    %
+--------------------------------------------------------------------------------
+hsOptFlowTop                          1.78e-03 1.78e-02 2.58e-03  2.22e-02 100.0
+  control (control)                   1.51e-06 9.73e-06 5.48e-06  1.67e-05   0.1
+    clk_gate_count_x_reg (SNPS_CLOCK_GATE_HIGH_control_1) 2.19e-08 4.02e-07 1.26e-07 5.50e-07   0.0
+    clk_gate_iterCount_reg (SNPS_CLOCK_GATE_HIGH_control_0) 9.36e-08 4.11e-07 1.26e-07 6.31e-07   0.0
+  uvMemory (uvMem)                    1.23e-04 1.33e-02 8.48e-04  1.43e-02  64.5
+    clk_gate_count_reg (SNPS_CLOCK_GATE_HIGH_uvMem) 1.36e-07 4.00e-07 1.26e-07 6.63e-07   0.0
+  winBuf2x2x2 (windowBuf2x2x2)        6.71e-05 6.57e-04 7.18e-05  7.96e-04   3.6
+  iterCalc (uvIteration)              1.16e-03 2.73e-03 1.16e-03  5.05e-03  22.8
+    winBuf3_v_row2buf (hsOptFlowTop_uvIteration_windowBuf3x3__row2buf_1) 2.54e-06 2.65e-04 2.56e-06 2.70e-04   1.2
+    winBuf3_u_row2buf (hsOptFlowTop_uvIteration_windowBuf3x3__row2buf_0) 6.12e-06 2.66e-04 2.92e-06 2.75e-04   1.2
+    winBuf3_v_row1buf (hsOptFlowTop_uvIteration_windowBuf3x3__row1buf_1) 5.74e-06 2.67e-04 2.79e-06 2.76e-04   1.2
+    winBuf3_u_row1buf (hsOptFlowTop_uvIteration_windowBuf3x3__row1buf_0) 7.00e-06 2.66e-04 4.74e-06 2.78e-04   1.3
+  winBuf5x5_1 (windowBuf5x5)          2.16e-05 3.68e-04 4.01e-05  4.30e-04   1.9
+  winBuf5x5_2 (windowBuf5x5_1)        3.82e-05 3.72e-04 3.80e-05  4.48e-04   2.0
+  pDeriv (partialDeriv)               3.33e-05 5.91e-05 2.26e-05  1.15e-04   0.5
+  gaussianF1 (gaussian_0)             2.74e-05 5.55e-05 9.35e-06  9.22e-05   0.4
+  gaussianF2 (gaussian_1)             2.54e-05 5.41e-05 9.15e-06  8.86e-05   0.4
+1

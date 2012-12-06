@@ -1,0 +1,6 @@
+current-pt
+build*/*.tcl
+build*/*.log
+build*/timestamp*
+build*/log
+
